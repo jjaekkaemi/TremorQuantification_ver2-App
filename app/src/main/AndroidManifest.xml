@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ahnbcilab.tremorquantification.tremorquantification">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true">
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/NoTitleBar" />
+        <activity
+            android:name=".PatientListActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SpiralTestListActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SpiralTestActivity"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".WrittenConsentActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AnalysisActivity"
+            android:theme="@style/NoTitleBar" />
+        <activity
+            android:name=".ResultActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SurveyListActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SubmitActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SpiralResultActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".PersonalPatient2"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".StateInfoActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MotorScaleTaskActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+
+            android:name=".CRTS_TaskActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".PersonalPatient_MotorScale"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".PersonalPatient_CRTS"
+            android:theme="@style/AppTheme" />
+    </application>
+
+</manifest>
