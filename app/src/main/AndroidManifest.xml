@@ -8,67 +8,34 @@
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/NoTitleBar">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SignUpActivity"
-            android:theme="@style/NoTitleBar" />
+        <activity android:name=".SpiralTestActivity" />
+        <activity android:name=".WrittenConsentActivity" />
+        <activity android:name=".AnalysisActivity" />
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".SurveyListActivity" />
+        <activity android:name=".SubmitActivity" />
+        <activity android:name=".SpiralResultActivity" />
+        <activity android:name=".PersonalPatient2" />
+        <activity android:name=".MotorScaleTaskActivity" />
+        <activity android:name=".CRTS_TaskActivity" />
+        <activity android:name=".PersonalPatient_MotorScale" />
+        <activity android:name=".PersonalPatient_CRTS" />
+        <activity android:name=".PersonalPatient" />
         <activity
             android:name=".PatientListActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SpiralTestListActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SpiralTestActivity"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name=".WrittenConsentActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".AnalysisActivity"
-            android:theme="@style/NoTitleBar" />
-        <activity
-            android:name=".ResultActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SurveyListActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SubmitActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SpiralResultActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".PersonalPatient2"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".StateInfoActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".MotorScaleTaskActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-
-            android:name=".CRTS_TaskActivity"
-            android:theme="@style/AppTheme" />
-
-        <activity android:name=".PersonalPatient_MotorScale"
-            android:theme="@style/AppTheme" />
-
-        <activity android:name=".PersonalPatient_CRTS"
-            android:theme="@style/AppTheme" />
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".UPDRSActivity" />
+        <activity android:name=".CRTSActivity"></activity>
     </application>
 
 </manifest>

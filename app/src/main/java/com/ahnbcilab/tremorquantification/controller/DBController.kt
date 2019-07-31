@@ -10,20 +10,20 @@ import com.ahnbcilab.tremorquantification.data.PatientData
 object DBController {
     object PatientDataDB : BaseColumns {
         const val TABLE_NAME = "Patient"
+        const val COLUMN_CLINIC_ID = "clinicID"
         const val COLUMN_PATIENT_NAME = "name"
-        const val COLUMN_SEX = "sex"
-        const val COLUMN_BIRTH_YEAR = "birth"
-        const val COLUMN_DESCRIPTION = "description"
+        const val COLUMN_USER_ID = "uid"
+        const val COLUMN_TASK_NO = "taskno"
     }
 
 
     private const val SQL_CREATE_PATIENT_DATA =
         "CREATE TABLE ${PatientDataDB.TABLE_NAME} (" +
-            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "${PatientDataDB.COLUMN_PATIENT_NAME} VARCHAR(10) NOT NULL," +
-            "${PatientDataDB.COLUMN_SEX} INTEGER," +
-            "${PatientDataDB.COLUMN_BIRTH_YEAR} CHAR(4)," +
-            "${PatientDataDB.COLUMN_DESCRIPTION} TEXT)"
+                "${PatientDataDB.COLUMN_CLINIC_ID} VARCHAR(10) PRIMARY KEY," +
+                "${PatientDataDB.COLUMN_PATIENT_NAME} VARCHAR(10)," +
+                "${PatientDataDB.COLUMN_USER_ID} VARCHAR(20)," +
+                "${PatientDataDB.COLUMN_TASK_NO} INTEGER" + ")"
+
 
 
     private const val SQL_DELETE_PATIENT_DATA =
@@ -55,10 +55,10 @@ object DBController {
             val db = this.writableDatabase
 
             val values = ContentValues().apply {
-                put(PatientDataDB.COLUMN_PATIENT_NAME, data.name)
-                put(PatientDataDB.COLUMN_SEX, data.sex)
-                put(PatientDataDB.COLUMN_BIRTH_YEAR, data.birth)
-                put(PatientDataDB.COLUMN_DESCRIPTION, data.description)
+                put(PatientDataDB.COLUMN_CLINIC_ID, data.toMap().getValue("ClinicID").toString())
+                put(PatientDataDB.COLUMN_PATIENT_NAME, data.toMap().getValue("ClinicName").toString())
+                put(PatientDataDB.COLUMN_USER_ID, data.toMap().getValue("UserID").toString())
+                put(PatientDataDB.COLUMN_TASK_NO, data.toMap().getValue("TaskNo") as Int)
             }
 
             val newRowId = db.insert(PatientDataDB.TABLE_NAME, null, values)
@@ -95,11 +95,10 @@ object DBController {
 
             if (projection == null) {
                 project = arrayOf(
-                    BaseColumns._ID,
+                    PatientDataDB.COLUMN_CLINIC_ID,
                     PatientDataDB.COLUMN_PATIENT_NAME,
-                    PatientDataDB.COLUMN_SEX,
-                    PatientDataDB.COLUMN_BIRTH_YEAR,
-                    PatientDataDB.COLUMN_DESCRIPTION)
+                    PatientDataDB.COLUMN_USER_ID,
+                    PatientDataDB.COLUMN_TASK_NO)
             }
             else
                 project = projection
@@ -122,10 +121,10 @@ object DBController {
             ).run {
                 while (moveToNext()) {
                     data.add(data.size, PatientData(
+                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_CLINIC_ID)),
                         getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_PATIENT_NAME)),
-                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_BIRTH_YEAR)).toInt(),
-                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_SEX)).toInt(),
-                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_DESCRIPTION))
+                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_USER_ID)),
+                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_TASK_NO)).toInt()
                     ).apply {
                         //id = getLong(getColumnIndexOrThrow(BaseColumns._ID)).toInt()
                     })

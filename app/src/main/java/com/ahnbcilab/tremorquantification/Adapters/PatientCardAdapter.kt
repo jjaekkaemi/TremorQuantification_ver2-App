@@ -11,7 +11,8 @@ import com.ahnbcilab.tremorquantification.tremorquantification.R
 import com.github.mikephil.charting.utils.Utils.init
 import com.google.firebase.auth.FirebaseAuth
 import android.R.attr.data
-
+import com.ahnbcilab.tremorquantification.tremorquantification.R.id.clinicIDItem
+import com.ahnbcilab.tremorquantification.tremorquantification.R.id.patientNameItem
 
 
 class PatientCardAdapter(context: Context, resource: Int, list: ArrayList<Patient>): ArrayAdapter<Patient>(context, resource, list) {
@@ -53,14 +54,11 @@ class PatientCardAdapter(context: Context, resource: Int, list: ArrayList<Patien
 
         //val patient: Patient? = if(mList[position].uid == uid) getItem(position) else null
         val patient: Patient? = if(count> position) getItem(position) else null
-        val patientName: TextView? = view.findViewById(R.id.patientName)
-        patientName?.text = patient?.id ?: ""
+        val clinic_id: TextView? = view.findViewById(R.id.clinicIDItem)
+        clinic_id!!.text = patient?.clinicID ?: ""
 
-        val patientDes: TextView? = view.findViewById(R.id.patientDescription)
-        patientDes?.text = patient?.description ?: ""
-
-        val DoctorUid: TextView? = view.findViewById(R.id.Doctor_Uid)
-        DoctorUid?.text = patient?.uid ?: ""
+        val patientName: TextView? = view.findViewById(R.id.patientNameItem)
+        patientName?.text = patient?.name ?: ""
 
         //val patientAge: TextView? = view.findViewById(R.id.patient_card_age)
         //patientAge?.text = patient?.age ?: ""

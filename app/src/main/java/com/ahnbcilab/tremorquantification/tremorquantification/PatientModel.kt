@@ -19,8 +19,8 @@ object PatientModel: Observable() {
         return FirebaseDatabase.getInstance().reference.child("PatientList")
     }
 
-
     init{
+
 
         if(mValueDataListener != null){
             getDatabaseRef()?.removeEventListener(mValueDataListener as ValueEventListener)

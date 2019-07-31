@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/nontask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/nontask" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="93dp"
+        android:layout_alignLeft="@id/nontask"
+        android:layout_alignRight="@id/nontask"
+        android:layout_alignBottom="@id/nontask"
+        android:background="@drawable/add_task"
+        android:layout_marginLeft="331dp"
+        android:layout_marginRight="332dp"
+        android:layout_marginBottom="231dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="336dp"
+        android:layout_marginEnd="228dp"
+        android:text="이전 테스크 결과가 없습니다. 테스크를 새로 진행해 주세요." />
+
+</RelativeLayout>

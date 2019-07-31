@@ -6,9 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
-        <item name="colorControlNormal">@color/WhiteGray</item>
-        <item name="colorControlActivated">@color/Primary</item>
+    <style name="actionMode">
+        <item name="actionModeBackground">@drawable/rectangle9</item>
     </style>
 
     <style name="NoTitleBar" parent="Theme.AppCompat.Light.DarkActionBar">

@@ -1,145 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="600dp"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="20dp">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp" >
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/textviewLogo"
+        android:layout_width="221dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="16dp"
         android:text="Add Patient"
-        android:textSize="30sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
+        android:textSize="28sp" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addDialogNameLayout"
+    <EditText
+        android:id="@+id/addClinicID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
-        android:textColorHint="@color/WhiteGray"
-        app:hintTextAppearance="@style/TextLabel"
-        app:errorEnabled="true">
+        android:layout_below="@+id/textviewLogo"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:hint="Clinical_ID"
+        android:inputType="textMultiLine|textNoSuggestions">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/addDialogName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textColor="@color/Primary"
-            android:textSize="30sp"
-            android:hint="Clinic_ID" />
+    </EditText>
 
-    </android.support.design.widget.TextInputLayout>
-
-    <RadioGroup
-        android:id="@+id/addDialogSexLayout"
+    <EditText
+        android:id="@+id/addPatientName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:paddingEnd="20dp">
+        android:layout_below="@+id/addClinicID"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textMultiLine|textNoSuggestions" />
 
-        <RadioButton
-            android:id="@+id/male"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:text="Male"
-            android:textSize="20sp"/>
-
-        <RadioButton
-            android:id="@+id/female"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Female"
-            android:textSize="20sp" />
-    </RadioGroup>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addDialogBirthLayout"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/patienAddButton"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
-        android:textColorHint="@color/WhiteGray"
-        app:hintTextAppearance="@style/TextLabel"
-        app:errorEnabled="true">
+        android:layout_below="@+id/addPatientName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
+        android:background="#00ff0000"
+        android:text="Next"
+        android:textColor="#009688" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/addDialogBirth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:textColor="@color/Primary"
-            android:textSize="30sp"
-            android:hint="Birth" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/addDialogDescriptionLayout"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/patienAddCancel"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
-        android:textColorHint="@color/WhiteGray"
-        app:hintTextAppearance="@style/TextLabel"
-        app:errorEnabled="false">
+        android:layout_below="@+id/addPatientName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginBottom="20dp"
+        android:background="#00ff0000"
+        android:textColor="#009688"
+        android:text="Cancel" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/addDialogDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textColor="@color/Primary"
-            android:textSize="30sp"
-            android:hint="Description" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <android.widget.Button
-            android:id="@+id/addDialogCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textSize="20sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/addDialogAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
-            android:textSize="20sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

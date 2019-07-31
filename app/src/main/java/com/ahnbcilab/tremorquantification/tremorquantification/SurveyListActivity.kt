@@ -21,7 +21,6 @@ import com.ahnbcilab.tremorquantification.data.PatientData
 import com.ahnbcilab.tremorquantification.tremorquantification.PatientModel.getData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_spiral_test_list.*
 import kotlinx.android.synthetic.main.activity_survey_list.*
 import kotlinx.android.synthetic.main.add_patient_dialog.*
 import org.apache.commons.math3.random.RandomDataGenerator
@@ -30,8 +29,8 @@ import java.io.Serializable
 import kotlin.collections.ArrayList
 import android.widget.TextView
 import com.ahnbcilab.tremorquantification.functions.Authentication
+import com.ahnbcilab.tremorquantification.tremorquantification.R.id.*
 import android.widget.AdapterView.AdapterContextMenuInfo
-import com.ahnbcilab.tremorquantification.tremorquantification.R.id.add_stateInfo
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import java.sql.Types.NULL
@@ -73,12 +72,9 @@ class SurveyListActivity : AppCompatActivity() , Observer {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survey_list)
 
-        uid = user?.uid
-        email = user?.email
-
-        userId.setText("login ID : " + email)
-
         adapter = PatientAdapter(this)
+
+        uid = user!!.uid
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
         PatientModel
@@ -99,11 +95,10 @@ class SurveyListActivity : AppCompatActivity() , Observer {
 
         patientSurList.setOnItemClickListener { parent, view, position, id ->
             run {
-                val patientName: TextView? = view.findViewById(R.id.patientName)
-                val patientId = patientName!!.text as String
+                val patientName: TextView? = view.findViewById(R.id.clinicIDItem)
                 val intent = Intent(this, PersonalPatient2::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                intent.putExtra("patientId", patientId)
+                intent.putExtra("ClinicID", patientName!!.text)
                 startActivity(intent)
                 finish()
             }
@@ -147,9 +142,8 @@ class SurveyListActivity : AppCompatActivity() , Observer {
         private var listItem: Array<PatientData> = db.select(null, false, null, null, DBController.PatientDataDB.COLUMN_PATIENT_NAME)
 
         private inner class ViewHolder {
-            lateinit var id: TextView
+            lateinit var clinic_id: TextView
             lateinit var name: TextView
-            lateinit var description: TextView
         }
 
         fun add(data: PatientData) {
@@ -176,9 +170,8 @@ class SurveyListActivity : AppCompatActivity() , Observer {
                 view = mInflator.inflate(R.layout.patient_list_item, parent, false)
 
                 holder = ViewHolder()
-                holder.name = view.findViewById(R.id.patientName) as TextView
-                holder.description = view.findViewById(R.id.patientDescription) as TextView
-                holder.id = view.findViewById(R.id.PatientId) as TextView
+                holder.clinic_id = view.findViewById(R.id.clinicIDItem) as TextView
+                holder.name = view.findViewById(R.id.patientNameItem) as TextView
                 view.tag = holder
             }
             else {
@@ -188,16 +181,17 @@ class SurveyListActivity : AppCompatActivity() , Observer {
 
             val patient = getItem(position) as PatientData
             val name = holder.name
-            val description = holder.description
-            val id = holder.id
+            val clinic_id = holder.clinic_id
 
-            name.text = patient.name
-            description.text = patient.description
+            name.text = patient.toMap().getValue("ClinicName").toString()
+            clinic_id.text = patient.toMap().getValue("ClinicID").toString()
             //id.text = patient.id.toString()
 
             return view
         }
+
     }
+
 
 
 
@@ -208,67 +202,30 @@ class SurveyListActivity : AppCompatActivity() , Observer {
             window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
             setContentView(R.layout.add_patient_dialog)
 
-            var sex: Int? = null
-
-            addDialogCancel.setOnClickListener {
+            patienAddCancel.setOnClickListener {
                 dismiss()
             }
 
-            addDialogSexLayout.setOnCheckedChangeListener { _, checkedId ->
-                when (checkedId) {
-                    R.id.male -> sex = PatientData.MALE
-                    R.id.female -> sex = PatientData.FEMALE
-                }
-            }
-
-            addDialogAdd.setOnClickListener {
+            patienAddButton.setOnClickListener {
                 when {
-                    addDialogName.text.isBlank() -> addDialogNameLayout.error = "Enter the Clinic_ID"
                     //addDialogBirth.text.isBlank() -> addDialogBirthLayout.error = "Enter the birth"
                     //sex == null -> addDialogNameLayout.error = "Enter the sex"
                     else -> {
-                        //generate patient code function
-                        fun random(): String {
-                            val generator = Random()
-                            val randomStringBuilder = StringBuilder()
-                            var tempChar: Char
-                            var tempNum: Int
-                            for (i in 0..4) {
-                                if (i < 3) {
-                                    tempChar = (generator.nextInt(26) + 97).toChar()
-                                    randomStringBuilder.append(tempChar)
-                                } else {
-                                    tempNum = generator.nextInt(10)
-                                    randomStringBuilder.append(tempNum)
-                                }
-                            }
-
-                            val code = randomStringBuilder.toString()
-                            return code;
-                        }
-                        patientcode = random();
 
                         val newData = PatientData(
-                                addDialogName.text.toString(),
-                                0,
-                                NULL,
-                                addDialogDescription.text.toString())
-                        newData.uid = uid.toString()
-                        newData.patientId = patientcode as String
-                        //newData.patientCode = patientcode.toString()
-
+                                addClinicID.text.toString(),
+                                addPatientName.text.toString(),
+                                uid.toString(),
+                                0)
 
                         adapter.add(newData)
 
-                        patient_data.add(addDialogName.text.toString())
-                        patient_data.add(sex.toString())
-                        patient_data.add(addDialogBirth.text.toString())
-                        patient_data.add(addDialogDescription.text.toString())
+                        patient_data.add(addClinicID.text.toString())
+                        patient_data.add(addPatientName.text.toString())
                         patient_data.add(uid.toString())
-                        patient_data.add(patientcode as String)
-                        //patient_data.add((Calendar.getInstance().get(Calendar.YEAR) - (addDialogBirth.text.toString().toInt()/10000) + 1).toString())
                         patient_data.add("0")
-                        FirebaseDatabase.getInstance().reference.child("PatientList").child(patientcode!!).setValue(newData).addOnCompleteListener {
+
+                        FirebaseDatabase.getInstance().reference.child("PatientList").child(addClinicID.text.toString()).setValue(newData).addOnCompleteListener {
                             if (it.isSuccessful){
                                 Toast.makeText(applicationContext, "value uploaded successfully!", Toast.LENGTH_LONG).show()
                             }else{
@@ -284,54 +241,6 @@ class SurveyListActivity : AppCompatActivity() , Observer {
 
         }
     }
-
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        menuInflater.inflate(R.menu.menu_list, menu)
-        val info = menuInfo as AdapterContextMenuInfo
-        val index = info.position
-        p_id = data[index].id
-        Log.v("알림!", p_id)
-        super.onCreateContextMenu(menu, v, menuInfo)
-    }
-
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        when (item!!.getItemId()) {
-            R.id.add_stateInfo -> {
-                val intent = Intent(this, StateInfoActivity::class.java)
-                intent.putExtra("doc_uid", uid)
-                intent.putExtra("patientId", p_id)
-                startActivity(intent)
-                finish()
-            }
-            R.id.add_motorscale -> {
-                val intent = Intent(this, MotorScaleTaskActivity::class.java)
-                intent.putExtra("doc_uid", uid)
-                intent.putExtra("patientId", p_id)
-                intent.putExtra("path", "surveyList")
-                startActivity(intent)
-                finish()
-            }
-            R.id.add_crt -> {
-                val intent = Intent(this, CRTS_TaskActivity::class.java)
-                intent.putExtra("doc_uid", uid)
-                intent.putExtra("patientId", p_id)
-                intent.putExtra("path", "surveyList")
-                startActivity(intent)
-                finish()
-            }
-            R.id.add_SpiralTask -> {
-                path = "maintask"
-                val intent = Intent(this, WrittenConsentActivity::class.java)
-                intent.putExtra("patientId", p_id)
-                intent.putExtra("path", path)
-                startActivity(intent)
-                finish()
-            }
-        }
-
-        return super.onContextItemSelected(item)
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_logout, menu)

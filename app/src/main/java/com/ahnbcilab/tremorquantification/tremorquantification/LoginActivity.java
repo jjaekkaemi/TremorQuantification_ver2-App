@@ -3,6 +3,7 @@ package com.ahnbcilab.tremorquantification.tremorquantification ;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -17,14 +18,18 @@ import android.util.Log;
 import android.view.View ;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.ahnbcilab.tremorquantification.controller.DBController;
 import com.ahnbcilab.tremorquantification.data.CurrentUserData;
 import com.ahnbcilab.tremorquantification.data.DoctorData;
 import com.ahnbcilab.tremorquantification.data.PatientData;
+import com.ahnbcilab.tremorquantification.functions.Authentication;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -54,6 +59,8 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 10;
@@ -112,17 +119,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                 if(user!=null){
-                    Intent intent = new Intent(LoginActivity.this, SurveyListActivity.class);
+
+                    Intent intent = new Intent(LoginActivity.this, PatientListActivity.class);
                     startActivity(intent);
                     finish();
+
                 }
+
             }
 
 
         };
 
-        databaseDoctor = firebaseDatabase.getReference("doctor");
+
+        databaseDoctor = firebaseDatabase.getReference("UserList");
+
         databaseDoctor.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -159,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         mAuth = FirebaseAuth.getInstance();
 
-        SignInButton button = (SignInButton) findViewById(R.id.login_button);
+        SignInButton button = (SignInButton) findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-        Button logout_btn_google = (Button) findViewById(R.id.account_change);
+        Button logout_btn_google = (Button) findViewById(R.id.accountChange);
 
         logout_btn_google.setOnClickListener(new View.OnClickListener() {
 
@@ -278,11 +291,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         getInfo();
                                         DoctorData doc = new DoctorData(name, email, uid);
                                         databaseDoctor.child(uid).setValue(doc);
-                                        Intent intent = new Intent(getApplicationContext(), SurveyListActivity.class);
-                                        intent.putExtra("uid", uid);
-                                        intent.putExtra("email", email);
-                                        intent.putExtra("mGoogleApiClient",""+mGoogleApiClient);
+
+                                        Intent intent = new Intent(getApplicationContext(), PatientListActivity.class);
                                         startActivity(intent);
+
                                     }
                                     else {
                                         alertDisplay();
@@ -370,11 +382,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         DoctorData doc = new DoctorData(name, email, uid);
                         databaseDoctor.child(uid).setValue(doc);
                         Toast.makeText(LoginActivity.this, email, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), SurveyListActivity.class);
-                        intent.putExtra("uid", uid);
-                        intent.putExtra("email", email);
 
+                        Intent intent = new Intent(getApplicationContext(), PatientListActivity.class);
                         startActivity(intent);
+
                     }
                 })
                 .setNegativeButton("동의안함", new DialogInterface.OnClickListener() {

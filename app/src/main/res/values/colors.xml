@@ -13,4 +13,7 @@
     <color name="Fourth">#FCFCFC</color>
     <color name="SemiBoldColor">#70A3F0</color>
 
+    <color name="list_item_selected_state">#F4F6F6</color>
+    <color name="list_item_normal_state">#FFFFFF</color>
+
 </resources>

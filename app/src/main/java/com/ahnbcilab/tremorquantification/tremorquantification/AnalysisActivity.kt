@@ -29,7 +29,7 @@ class AnalysisActivity : AppCompatActivity() {
         dialog.setCancelable(false);
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", DialogInterface.OnClickListener {dialog, which -> run {
             dialog.dismiss()
-            val cancel_Intent = Intent(this, SpiralTestListActivity::class.java)
+            val cancel_Intent = Intent(this, SurveyListActivity::class.java)
             cancel_Intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(cancel_Intent)
         }})
