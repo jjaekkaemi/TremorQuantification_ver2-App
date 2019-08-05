@@ -17,16 +17,22 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.widget.RadioButton
-
-
-
+import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.series.DataPoint
+import com.jjoe64.graphview.series.LineGraphSeries
+import kotlinx.android.synthetic.main.activity_personal_patient2.*
+import java.io.File
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.*
 
 
 class MotorScaleTaskActivity : AppCompatActivity() {
     private val firebaseDatabase = FirebaseDatabase.getInstance()
     var motorScale_score : Int = 0
-    var patientId : String = ""
+    var Clinic_ID : String = ""
+    var PatientName : String = ""
     var path : String = ""
     var uid : String = ""
     var bool : Boolean = true
@@ -87,31 +93,35 @@ class MotorScaleTaskActivity : AppCompatActivity() {
     var sx : Int = 0
     var sy : Int = 0
     var sz : Int = 0
+    var taskno : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_motor_scale_task)
 
         val intent = intent
-        patientId = intent.getStringExtra("patientId")
+        Clinic_ID = intent.getStringExtra("Clinic_ID")
+        PatientName = intent.getStringExtra("PatientName")
         uid = intent.getStringExtra("doc_uid")
 
-        val databaseMotorScale = firebaseDatabase.getReference("MotorScale_List")
+        val databasepatient = firebaseDatabase.getReference("PatientList")
+        val databaseclinicID = databasepatient.child(Clinic_ID).child("UPDRS List")
 
-        databaseMotorScale.addValueEventListener(object : ValueEventListener {
+        databaseclinicID.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                motor_count = dataSnapshot.childrenCount.toInt()
-                if(motor_count < 10){
-                    smotor_count = "0" + motor_count
+                taskno = dataSnapshot.childrenCount.toInt()
+                // TODO: show the count in the UI
+                if(taskno < 10){
+                    smotor_count = "0" + taskno
                 }
                 else{
-                    smotor_count = motor_count.toString()
+                    smotor_count = taskno.toString()
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {}
         })
+
 
         Motorscale_submit.setOnClickListener(){
             if(CBpart3_1_0.isChecked){
@@ -776,17 +786,36 @@ class MotorScaleTaskActivity : AppCompatActivity() {
 
                             motorScale_score = sa+sb+sc+sd+se+sf+sg+sh+si1+sj+sk+sl+sm+sn+sn1+so+sp+sq+sr+ss+st+su+sv+sw+sx+sy+sz
 
-                            val motor = MotorScale(patientId, uid, timestamp, motor_count, motorScale_score)
+                            val motor = UPDRS(timestamp, taskno, motorScale_score)
 
-                            databaseMotorScale.child("Task No "+smotor_count).setValue(motor).addOnCompleteListener {
+                            databaseclinicID.child("Task No "+smotor_count).setValue(motor).addOnCompleteListener {
                                 Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                             }
 
-                            databaseMotorScale.child("Task No "+smotor_count).child("MotorScale_task").setValue(motorScale).addOnCompleteListener {
+                            databaseclinicID.child("Task No "+smotor_count).child("UPDRS task").setValue(motorScale).addOnCompleteListener {
                                 Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                             }
 
-                            val intent = Intent(this, SurveyListActivity::class.java)
+                            databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    for (childDataSnapshot in dataSnapshot.children) {
+                                        val crts_count = childDataSnapshot.child("CRTS List").childrenCount
+                                        val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
+                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                                    }
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+
+                                }
+                            })
+
+
+                            val intent = Intent(this, PersonalPatient::class.java)
+                            intent.putExtra("ClinicID", Clinic_ID)
+                            intent.putExtra("PatientName", PatientName)
+                            intent.putExtra("doc_uid", uid)
+                            intent.putExtra("task", "UPDRS")
                             startActivity(intent)
                             finish()
 
@@ -803,21 +832,37 @@ class MotorScaleTaskActivity : AppCompatActivity() {
 
                 motorScale_score = sa+sb+sc+sd+se+sf+sg+sh+si1+sj+sk+sl+sm+sn+sn1+so+sp+sq+sr+ss+st+su+sv+sw+sx+sy+sz
 
-                val motor = MotorScale(patientId, uid, timestamp, motor_count, motorScale_score)
+                val motor = UPDRS(timestamp, taskno, motorScale_score)
 
-                databaseMotorScale.child("Task No "+smotor_count).setValue(motor).addOnCompleteListener {
+                databaseclinicID.child("Task No "+smotor_count).setValue(motor).addOnCompleteListener {
                     Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                 }
 
-                databaseMotorScale.child("Task No "+smotor_count).child("MotorScale_task").setValue(motorScale).addOnCompleteListener {
+                databaseclinicID.child("Task No "+smotor_count).child("UPDRS task").setValue(motorScale).addOnCompleteListener {
                     Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                 }
 
-                val intent = Intent(this, SurveyListActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        for (childDataSnapshot in dataSnapshot.children) {
+                            val crts_count = childDataSnapshot.child("CRTS List").childrenCount
+                            val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
+                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+
+                    }
+                })
+
+                val intent = Intent(this, PersonalPatient::class.java)
+                intent.putExtra("ClinicID", Clinic_ID)
+                intent.putExtra("PatientName", PatientName)
+                intent.putExtra("doc_uid", uid)
+                intent.putExtra("task", "UPDRS")
                 startActivity(intent)
                 finish()
-
 
             }
 

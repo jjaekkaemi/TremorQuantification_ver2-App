@@ -5,20 +5,23 @@ import com.google.firebase.database.Exclude;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CRTS {
+public class UPDRS {
     String timestamp;
-    int CRTS_count;
+    int UPDRS_count;
+    int UPDRS_score;
 
-    public CRTS(String timestamp, int CRTS_count) {
+    public UPDRS(String timestamp, int UPDRS_count, int UPDRS_score) {
         this.timestamp = timestamp;
-        this.CRTS_count = CRTS_count;
+        this.UPDRS_count = UPDRS_count;
+        this.UPDRS_score = UPDRS_score;
     }
 
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("timestamp", timestamp);
-        result.put("count", CRTS_count);
+        result.put("count", UPDRS_count);
+        result.put("updrs_score", UPDRS_score);
         return result;
     }
 }

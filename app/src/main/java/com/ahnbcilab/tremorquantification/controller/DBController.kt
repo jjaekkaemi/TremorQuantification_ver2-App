@@ -14,6 +14,7 @@ object DBController {
         const val COLUMN_PATIENT_NAME = "name"
         const val COLUMN_USER_ID = "uid"
         const val COLUMN_TASK_NO = "taskno"
+        const val COLUMN_DISEASE_TYPE = "DiseaseType"
     }
 
 
@@ -22,7 +23,8 @@ object DBController {
                 "${PatientDataDB.COLUMN_CLINIC_ID} VARCHAR(10) PRIMARY KEY," +
                 "${PatientDataDB.COLUMN_PATIENT_NAME} VARCHAR(10)," +
                 "${PatientDataDB.COLUMN_USER_ID} VARCHAR(20)," +
-                "${PatientDataDB.COLUMN_TASK_NO} INTEGER" + ")"
+                "${PatientDataDB.COLUMN_TASK_NO} INTEGER," +
+                "${PatientDataDB.COLUMN_DISEASE_TYPE} VARCHAR(10)" + ")"
 
 
 
@@ -59,6 +61,7 @@ object DBController {
                 put(PatientDataDB.COLUMN_PATIENT_NAME, data.toMap().getValue("ClinicName").toString())
                 put(PatientDataDB.COLUMN_USER_ID, data.toMap().getValue("UserID").toString())
                 put(PatientDataDB.COLUMN_TASK_NO, data.toMap().getValue("TaskNo") as Int)
+                put(PatientDataDB.COLUMN_DISEASE_TYPE, data.toMap().getValue("DiseaseType").toString())
             }
 
             val newRowId = db.insert(PatientDataDB.TABLE_NAME, null, values)
@@ -98,7 +101,8 @@ object DBController {
                     PatientDataDB.COLUMN_CLINIC_ID,
                     PatientDataDB.COLUMN_PATIENT_NAME,
                     PatientDataDB.COLUMN_USER_ID,
-                    PatientDataDB.COLUMN_TASK_NO)
+                    PatientDataDB.COLUMN_TASK_NO,
+                        PatientDataDB.COLUMN_DISEASE_TYPE)
             }
             else
                 project = projection
@@ -124,7 +128,8 @@ object DBController {
                         getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_CLINIC_ID)),
                         getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_PATIENT_NAME)),
                         getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_USER_ID)),
-                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_TASK_NO)).toInt()
+                        getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_TASK_NO)).toInt(),
+                            getString(getColumnIndexOrThrow(PatientDataDB.COLUMN_DISEASE_TYPE))
                     ).apply {
                         //id = getLong(getColumnIndexOrThrow(BaseColumns._ID)).toInt()
                     })

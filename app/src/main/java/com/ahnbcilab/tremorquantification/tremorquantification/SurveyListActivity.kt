@@ -216,7 +216,7 @@ class SurveyListActivity : AppCompatActivity() , Observer {
                                 addClinicID.text.toString(),
                                 addPatientName.text.toString(),
                                 uid.toString(),
-                                0)
+                                0, null)
 
                         adapter.add(newData)
 
@@ -224,6 +224,7 @@ class SurveyListActivity : AppCompatActivity() , Observer {
                         patient_data.add(addPatientName.text.toString())
                         patient_data.add(uid.toString())
                         patient_data.add("0")
+                        patient_data.add(null.toString())
 
                         FirebaseDatabase.getInstance().reference.child("PatientList").child(addClinicID.text.toString()).setValue(newData).addOnCompleteListener {
                             if (it.isSuccessful){

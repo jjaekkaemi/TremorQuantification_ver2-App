@@ -10,12 +10,14 @@ public class PatientData {
         String ClinicName;
         String UserID;
         int TaskNo;
+        String DiseaseType;
 
-        public PatientData(String clinicID, String clinicName, String userID, int taskNo) {
+        public PatientData(String clinicID, String clinicName, String userID, int taskNo, String diseaseType) {
                 ClinicID = clinicID;
                 ClinicName = clinicName;
                 UserID = userID;
                 TaskNo = taskNo;
+                DiseaseType = diseaseType;
         }
 
         @Exclude
@@ -25,6 +27,7 @@ public class PatientData {
                 result.put("ClinicName", ClinicName);
                 result.put("UserID", UserID);
                 result.put("TaskNo", TaskNo);
+                result.put("DiseaseType", DiseaseType);
                 return result;
         }
 }

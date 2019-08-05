@@ -30,6 +30,7 @@ import android.widget.RadioButton
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.util.concurrent.TimeUnit
 
 
 class CRTS_TaskActivity : AppCompatActivity() {
@@ -38,7 +39,8 @@ class CRTS_TaskActivity : AppCompatActivity() {
     var crts_partB_score : Int = 0
     var crts_partC_score : Int = 0
     var bool : Boolean = true
-    var patientId : String = ""
+    var Clinic_ID : String = ""
+    var patientName : String = ""
     var uid : String = ""
     var path : String = ""
     var path1 : String = ""
@@ -127,6 +129,7 @@ class CRTS_TaskActivity : AppCompatActivity() {
     var sc21 : Int = 0
     var sc22 : Int = 0
     var sc23 : Int = 0
+    var taskno : Int = 0
 
 
 
@@ -135,25 +138,23 @@ class CRTS_TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_crts__task)
 
         val intent = intent
-        patientId = intent.getStringExtra("patientId")
+        Clinic_ID = intent.getStringExtra("Clinic_ID")
+        patientName = intent.getStringExtra("PatientName")
         path1 = intent.getStringExtra("path")
-        Log.v("stoppp", path1)
         uid = intent.getStringExtra("doc_uid")
-        c14 = intent.getIntExtra("c14", -1)
-        sc14 = c14
-        if(sc14 == -1){
-            sc14 = 0
-        }
 
-        val databaseCRTS = firebaseDatabase.getReference("CRTS_List")
-        databaseCRTS.addValueEventListener(object : ValueEventListener {
+        val databasepatient = firebaseDatabase.getReference("PatientList")
+        val databaseclinicID = databasepatient.child(Clinic_ID).child("CRTS List")
+
+        databaseclinicID.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                crts_count = dataSnapshot.childrenCount.toInt()
-                if(crts_count < 10){
-                    scrts_count = "0" + crts_count
+                taskno = dataSnapshot.childrenCount.toInt()
+                // TODO: show the count in the UI
+                if(taskno < 10){
+                    scrts_count = "0" + taskno
                 }
                 else{
-                    scrts_count = crts_count.toString()
+                    scrts_count = taskno.toString()
                 }
 
             }
@@ -166,7 +167,7 @@ class CRTS_TaskActivity : AppCompatActivity() {
             path = "subtask"
 
             intent.putExtra("path", path)
-            intent.putExtra("patientId", patientId)
+            intent.putExtra("patientId", Clinic_ID)
             intent.putExtra("crts_count", crts_count)
             startActivity(intent)
         }
@@ -942,6 +943,7 @@ class CRTS_TaskActivity : AppCompatActivity() {
 
                             val sdf = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
                             val timestamp = sdf.format(Date())
+                            val c14 = 0
                             val my_crts = CRTS_Data(c1_1, c1_2, c1_3, c2_1, c2_2, c2_3, c3_1, c3_2, c3_3, c4_1, c4_2, c4_3, c5_1, c5_2, c5_3, c6_1, c6_2, c6_3, c7_1, c7_2, c7_3,
                                     c8_1, c8_2, c8_3, c9_1, c9_2, c9_3, c10_1, c10_2, c10_3, c14, c15_1, c15_2, c16, c17, c18, c19, c20, c21, c22, c23)
 
@@ -951,21 +953,39 @@ class CRTS_TaskActivity : AppCompatActivity() {
                             crts_partC_score = sc16 + sc17 + sc18 + sc19 + sc20 + sc21 + sc22 + sc23
 
                             val crts_score = CRTS_Score(crts_partA_score, crts_partB_score, crts_partC_score)
-                            var m_crts = CRTS(patientId, uid, timestamp, crts_count)
-                            databaseCRTS.child("Task No " + scrts_count).setValue(m_crts).addOnCompleteListener {
+                            var m_crts = CRTS(timestamp, crts_count)
+
+                            databaseclinicID.child("Task No "+scrts_count).setValue(m_crts).addOnCompleteListener {
                                 Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                             }
 
-                            databaseCRTS.child("Task No "+scrts_count).child("CRTS_Score").setValue(crts_score).addOnCompleteListener {
-                                Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
-                            }
-                            databaseCRTS.child("Task No "+scrts_count).child("CRTS_task").setValue(my_crts).addOnCompleteListener {
+                            databaseclinicID.child("Task No "+scrts_count).child("CRTS score").setValue(crts_score).addOnCompleteListener {
                                 Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                             }
 
+                            databaseclinicID.child("Task No "+scrts_count).child("CRTS task").setValue(my_crts).addOnCompleteListener {
+                                Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
+                            }
 
-                            val intent = Intent(this, SurveyListActivity::class.java)
+                            databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    for (childDataSnapshot in dataSnapshot.children) {
+                                        val crts_count = childDataSnapshot.child("CRTS List").childrenCount
+                                        val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
+                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                                    }
+                                }
 
+                                override fun onCancelled(databaseError: DatabaseError) {
+
+                                }
+                            })
+
+                            val intent = Intent(this, PersonalPatient::class.java)
+                            intent.putExtra("ClinicID", Clinic_ID)
+                            intent.putExtra("PatientName", patientName)
+                            intent.putExtra("doc_uid", uid)
+                            intent.putExtra("task", "CRTS")
                             startActivity(intent)
                             finish()
 
@@ -979,6 +999,7 @@ class CRTS_TaskActivity : AppCompatActivity() {
         else {
                 val sdf = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
                 val timestamp = sdf.format(Date())
+                val c14 = 0
                 val my_crts = CRTS_Data(c1_1, c1_2, c1_3, c2_1, c2_2, c2_3, c3_1, c3_2, c3_3, c4_1, c4_2, c4_3, c5_1, c5_2, c5_3, c6_1, c6_2, c6_3, c7_1, c7_2, c7_3,
                         c8_1, c8_2, c8_3, c9_1, c9_2, c9_3, c10_1, c10_2, c10_3, c14, c15_1, c15_2, c16, c17, c18, c19, c20, c21, c22, c23)
 
@@ -988,20 +1009,41 @@ class CRTS_TaskActivity : AppCompatActivity() {
                 crts_partC_score = sc16 + sc17 + sc18 + sc19 + sc20 + sc21 + sc22 + sc23
 
                 val crts_score = CRTS_Score(crts_partA_score, crts_partB_score, crts_partC_score)
-                var m_crts = CRTS(patientId, uid, timestamp, crts_count)
-                databaseCRTS.child("Task No " + scrts_count).setValue(m_crts).addOnCompleteListener {
+                var m_crts = CRTS(timestamp, crts_count)
+
+                databaseclinicID.child("Task No "+scrts_count).setValue(m_crts).addOnCompleteListener {
                     Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                 }
 
-                databaseCRTS.child("Task No "+scrts_count).child("CRTS_Score").setValue(crts_score).addOnCompleteListener {
+                databaseclinicID.child("Task No "+scrts_count).child("CRTS score").setValue(crts_score).addOnCompleteListener {
                     Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                 }
-                databaseCRTS.child("Task No "+scrts_count).child("CRTS_task").setValue(my_crts).addOnCompleteListener {
+
+                databaseclinicID.child("Task No "+scrts_count).child("CRTS task").setValue(my_crts).addOnCompleteListener {
                     Toast.makeText(applicationContext, "success", Toast.LENGTH_SHORT).show()
                 }
 
 
-                val intent = Intent(this, SurveyListActivity::class.java)
+
+                databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        for (childDataSnapshot in dataSnapshot.children) {
+                            val crts_count = childDataSnapshot.child("CRTS List").childrenCount
+                            val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
+                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+
+                    }
+                })
+
+                val intent = Intent(this, PersonalPatient::class.java)
+                intent.putExtra("ClinicID", Clinic_ID)
+                intent.putExtra("PatientName", patientName)
+                intent.putExtra("doc_uid", uid)
+                intent.putExtra("task", "CRTS")
                 startActivity(intent)
                 finish()
             }

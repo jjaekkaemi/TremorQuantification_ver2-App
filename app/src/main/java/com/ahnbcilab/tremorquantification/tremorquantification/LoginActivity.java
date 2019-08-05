@@ -105,59 +105,48 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
         if (!calledAlready)
         {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true); // 다른 인스턴스보다 먼저 실행되어야 한다.
             calledAlready = true;
         }
-
         firebaseAuth = FirebaseAuth.getInstance();
 
+
+
+// 자동로그인
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                 if(user!=null){
-
                     Intent intent = new Intent(LoginActivity.this, PatientListActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
-
             }
 
 
         };
 
 
-        databaseDoctor = firebaseDatabase.getReference("UserList");
 
+        databaseDoctor = firebaseDatabase.getReference("UserList");
         databaseDoctor.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()) {
-                    //MyFiles filename = (MyFiles) fileSnapshot.getValue(MyFiles.class);
-                    //하위키들의 value를 어떻게 가져오느냐???
                     r_uid = fileSnapshot.child("uid").getValue(String.class);
-                    if(r_uid != null){
-
-                    }
-                    else{
-                        Log.v("알림", "null");
-                    }
                     uid_list.add(r_uid);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.v("알림", "Failed");
             }
         });
+
+
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -172,6 +161,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         mAuth = FirebaseAuth.getInstance();
 
+
+
+        // 구글로그인 버튼 클릭
         SignInButton button = (SignInButton) findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,77 +174,47 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-        Button logout_btn_google = (Button) findViewById(R.id.accountChange);
 
+        //계정변경 버튼 클릭
+        Button logout_btn_google = (Button) findViewById(R.id.accountChange);
         logout_btn_google.setOnClickListener(new View.OnClickListener() {
 
             @Override
 
             public void onClick(final View view) {
-
                 Log.v("알림", "구글 LOGOUT");
-
                 AlertDialog.Builder alt_bld = new AlertDialog.Builder(view.getContext());
-
                 alt_bld.setMessage("다른 계정으로 로그인 하시겠습니까?").setCancelable(false)
-
                         .setPositiveButton("네",
-
                                 new DialogInterface.OnClickListener() {
 
                                     public void onClick(DialogInterface dialog, int id) {
-
                                         signOut();
-
                                     }
 
                                 }).setNegativeButton("아니오",
-
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int id) {
-
                                 // 아니오 클릭. dialog 닫기.
-
                                 dialog.cancel();
-
                             }
 
                         });
-
                 AlertDialog alert = alt_bld.create();
-
-
-                // 대화창 클릭시 뒷 배경 어두워지는 것 막기
-
-                //alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-
-                // 대화창 제목 설정
-
                 alert.setTitle("계정 변경");
-
-
-                // 대화창 아이콘 설정
-
                 alert.setIcon(R.drawable.assignment);
-
                 alert.show();
-
-
             }
 
         });
-
     }
 
 
+    // 구글 로그인 완료
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -261,14 +223,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Toast.makeText(LoginActivity.this, "FireBase 아이디 생성이 완료 되었습니다", Toast.LENGTH_SHORT).show();
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-
-
             } else {
                 Log.v("알림", result.isSuccess() + " Google Sign In failed. Because : " + result.getStatus().toString());
             }
         }
     }
 
+
+
+    // 로그인 완료 후 database 저장 후, 액티비티 이동
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -291,87 +254,60 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         getInfo();
                                         DoctorData doc = new DoctorData(name, email, uid);
                                         databaseDoctor.child(uid).setValue(doc);
-
                                         Intent intent = new Intent(getApplicationContext(), PatientListActivity.class);
                                         startActivity(intent);
-
                                     }
                                     else {
                                         alertDisplay();
                                     }
                                 }
                             }
-
                         }
 
                     }
                 });
     }
-
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.v("알림", "onConnectionFailed");
     }
 
+
+
+    // 로그아웃
     public void signOut() {
-
         mGoogleApiClient.connect();
-
         mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-
             @Override
-
             public void onConnected(@Nullable Bundle bundle) {
-
                 mAuth.signOut();
-
                 if (mGoogleApiClient.isConnected()) {
-
                     Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
 
                         @Override
-
                         public void onResult(@NonNull Status status) {
-
                             if (status.isSuccess()) {
-
                                 Log.v("알림", "로그아웃 성공");
-
                                 setResult(1);
-
                             } else {
-
                                 setResult(0);
-
                             }
-
                         }
-
                     });
-
                 }
-
             }
-
             @Override
-
             public void onConnectionSuspended(int i) {
-
                 Log.v("알림", "Google API Client Connection Suspended");
-
                 setResult(-1);
-
                 finish();
-
             }
-
         });
-
     }
 
 
 
+    // alert창 띄우기
     public void alertDisplay(){
-
         AlertDialog.Builder dlg = new AlertDialog.Builder(this);
         dlg.setTitle("프로필 가져오기")
                 .setMessage("google 프로필을 가져오는 것에 동의하십니까?")
@@ -382,7 +318,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         DoctorData doc = new DoctorData(name, email, uid);
                         databaseDoctor.child(uid).setValue(doc);
                         Toast.makeText(LoginActivity.this, email, Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(getApplicationContext(), PatientListActivity.class);
                         startActivity(intent);
 
@@ -398,6 +333,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
+    // 사용자 정보 가져오기
     public void getInfo(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         name = user.getDisplayName();
@@ -405,6 +341,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         uid = user.getUid();
     }
 
+
+
+    // Backbutton 클릭
     @Override
     public void onBackPressed() {
         if(System.currentTimeMillis() - lastTimeBackPressed < 1500){

@@ -23,7 +23,6 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter
 import android.R.attr.data
 import android.text.method.TextKeyListener.clear
 import android.widget.*
-import com.ahnbcilab.tremorquantification.data.MotorScale
 
 
 class PersonalPatient2 : AppCompatActivity() {

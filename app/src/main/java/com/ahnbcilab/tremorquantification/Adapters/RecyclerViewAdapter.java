@@ -74,6 +74,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.cl_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_selected_state));
         else
             holder.cl_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_normal_state));
+
+        if(data.getPatientType() == "P"){
+            holder.patientType.setBackground(ContextCompat.getDrawable(mContext, R.drawable.parkinson));
+
+        }
+        else if(data.getPatientType() == "ET"){
+            holder.patientType.setBackground(ContextCompat.getDrawable(mContext, R.drawable.essential_tremor));
+        }
+        else{
+
+        }
     }
 
     @Override
