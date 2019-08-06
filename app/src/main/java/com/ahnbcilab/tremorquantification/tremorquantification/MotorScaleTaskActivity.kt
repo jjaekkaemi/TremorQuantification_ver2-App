@@ -801,7 +801,8 @@ class MotorScaleTaskActivity : AppCompatActivity() {
                                     for (childDataSnapshot in dataSnapshot.children) {
                                         val crts_count = childDataSnapshot.child("CRTS List").childrenCount
                                         val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
-                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                                        val spiral_count = childDataSnapshot.child("Spiral List").childrenCount
+                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count)
                                     }
                                 }
 
@@ -847,7 +848,8 @@ class MotorScaleTaskActivity : AppCompatActivity() {
                         for (childDataSnapshot in dataSnapshot.children) {
                             val crts_count = childDataSnapshot.child("CRTS List").childrenCount
                             val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
-                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                            val spiral_count = childDataSnapshot.child("Spiral List").childrenCount
+                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count)
                         }
                     }
 

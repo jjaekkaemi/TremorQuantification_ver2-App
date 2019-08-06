@@ -163,12 +163,14 @@ class CRTS_TaskActivity : AppCompatActivity() {
         })
 
         spiralButton.setOnClickListener(){
-            val intent = Intent(this, WrittenConsentActivity::class.java)
+            val intent = Intent(this, SpiralTestActivity::class.java)
             path = "subtask"
 
             intent.putExtra("path", path)
-            intent.putExtra("patientId", Clinic_ID)
-            intent.putExtra("crts_count", crts_count)
+            intent.putExtra("Clinic_ID", Clinic_ID)
+            intent.putExtra("PatientName", patientName)
+            intent.putExtra("doc_uid", uid)
+
             startActivity(intent)
         }
 
@@ -943,7 +945,6 @@ class CRTS_TaskActivity : AppCompatActivity() {
 
                             val sdf = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
                             val timestamp = sdf.format(Date())
-                            val c14 = 0
                             val my_crts = CRTS_Data(c1_1, c1_2, c1_3, c2_1, c2_2, c2_3, c3_1, c3_2, c3_3, c4_1, c4_2, c4_3, c5_1, c5_2, c5_3, c6_1, c6_2, c6_3, c7_1, c7_2, c7_3,
                                     c8_1, c8_2, c8_3, c9_1, c9_2, c9_3, c10_1, c10_2, c10_3, c14, c15_1, c15_2, c16, c17, c18, c19, c20, c21, c22, c23)
 
@@ -972,7 +973,8 @@ class CRTS_TaskActivity : AppCompatActivity() {
                                     for (childDataSnapshot in dataSnapshot.children) {
                                         val crts_count = childDataSnapshot.child("CRTS List").childrenCount
                                         val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
-                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                                        val spiral_count = childDataSnapshot.child("Spiral List").childrenCount
+                                        databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count)
                                     }
                                 }
 
@@ -999,7 +1001,6 @@ class CRTS_TaskActivity : AppCompatActivity() {
         else {
                 val sdf = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
                 val timestamp = sdf.format(Date())
-                val c14 = 0
                 val my_crts = CRTS_Data(c1_1, c1_2, c1_3, c2_1, c2_2, c2_3, c3_1, c3_2, c3_3, c4_1, c4_2, c4_3, c5_1, c5_2, c5_3, c6_1, c6_2, c6_3, c7_1, c7_2, c7_3,
                         c8_1, c8_2, c8_3, c9_1, c9_2, c9_3, c10_1, c10_2, c10_3, c14, c15_1, c15_2, c16, c17, c18, c19, c20, c21, c22, c23)
 
@@ -1030,7 +1031,8 @@ class CRTS_TaskActivity : AppCompatActivity() {
                         for (childDataSnapshot in dataSnapshot.children) {
                             val crts_count = childDataSnapshot.child("CRTS List").childrenCount
                             val updrs_count = childDataSnapshot.child("UPDRS List").childrenCount
-                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count)
+                            val spiral_count = childDataSnapshot.child("Spiral List").childrenCount
+                            databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count)
                         }
                     }
 

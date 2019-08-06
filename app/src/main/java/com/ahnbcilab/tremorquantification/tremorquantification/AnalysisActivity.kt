@@ -11,8 +11,9 @@ import com.ahnbcilab.tremorquantification.functions.main
 class AnalysisActivity : AppCompatActivity() {
     private val filename: String by lazy { intent.extras.getString("filename") }
     var path1 : String = ""
-    var PatientId : String = ""
-    var crts_count : Int = 0
+    var Clinic_ID : String = ""
+    var PatientName : String = ""
+    var uid : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +21,9 @@ class AnalysisActivity : AppCompatActivity() {
 
         val intent = intent
         path1 = intent.getStringExtra("path1")
-        PatientId = intent.getStringExtra("PatientId")
-        crts_count = intent.getIntExtra("crts_count", -1)
+        Clinic_ID = intent.getStringExtra("Clinic_ID")
+        PatientName = intent.getStringExtra("PatientName")
+        uid = intent.getStringExtra("doc_uid")
 
 
         val dialog = ProgressDialog(this)
@@ -42,8 +44,9 @@ class AnalysisActivity : AppCompatActivity() {
         val intent1 = Intent(this, SpiralResultActivity::class.java)
         intent1.putExtra("result", result)
         intent1.putExtra("path1", path1)
-        intent1.putExtra("PatientId", PatientId)
-        intent1.putExtra("crts_count", crts_count)
+        intent1.putExtra("Clinic_ID", Clinic_ID)
+        intent1.putExtra("PatientName", PatientName)
+        intent1.putExtra("doc_uid", uid)
         startActivity(intent1)
 
     }

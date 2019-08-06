@@ -6,17 +6,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.ahnbcilab.tremorquantification.Adapters.TaskListViewAdapter;
+import com.ahnbcilab.tremorquantification.data.TaskItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,19 +32,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 
 public class CRTS_Fragment extends Fragment {
+    RecyclerView recyclerView;
+    TaskListViewAdapter taskListViewAdapter;
+    ArrayList<TaskItem> tasks = new ArrayList<TaskItem>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference database_updrs;
+    DatabaseReference database_crts;
+    DatabaseReference database_patient;
     String Clinic_ID;
     String PatientName;
     String uid;
     View view;
-    int crts_count;
     File file;
     String m;
+    String timestamp;
+    String crts_score;
+    String partA_score, partB_score, partC_score;
 
     @Nullable
     @Override
@@ -76,8 +90,9 @@ public class CRTS_Fragment extends Fragment {
 
 
         //환자 별 CRTS_task 개수 database에서 받아오기
-        database_updrs = firebaseDatabase.getReference("PatientList").child(Clinic_ID).child("CRTS List");
-        database_updrs.addValueEventListener(new ValueEventListener() {
+        database_patient = firebaseDatabase.getReference("PatientList");
+        database_crts = database_patient.child(Clinic_ID).child("CRTS List");
+        database_crts.addValueEventListener(new ValueEventListener() {
             int temp_count = 0;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -102,6 +117,88 @@ public class CRTS_Fragment extends Fragment {
             Log.v("aaaaa", m);
             if(Integer.parseInt(m) > 0){
                 view = inflater.inflate(R.layout.task_crts_fragment, container, false);
+                recyclerView = (RecyclerView) view.findViewById(R.id.personal_crts_taskList);
+                taskListViewAdapter = new TaskListViewAdapter(getActivity(), tasks);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(taskListViewAdapter);
+
+                database_patient.orderByChild("ClinicID").equalTo(Clinic_ID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int count = 1;
+                        GraphView graphView = (GraphView) view.findViewById(R.id.crts_graph);
+                        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                        series.appendData(new DataPoint(0,0), true, 100);
+                        //recyclerViewAdapter.clear();
+                        for (DataSnapshot mData : dataSnapshot.getChildren()){
+                            String msg = mData.child("CRTS List").getValue().toString();
+                            String[] array = msg.split(", |\\}");
+                            for(int i=0; i<array.length; i++){
+                                if(array[i].contains("partC_score") || array[i].contains("partB_score") || array[i].contains("partA_score")){
+                                    Log.v("ddddd", array[i]);
+                                    if(array[i].contains("partA_score")){
+                                        Log.v("ccccc", "PartA = " + array[i]);
+                                        partA_score = array[i].substring(array[i].indexOf("=")+1);
+                                    }
+                                    else if(array[i].contains("partB_score")){
+                                        Log.v("ccccc", "PartB = " + array[i]);
+                                        partB_score = array[i].substring(array[i].indexOf("=")+1);
+                                    }
+                                    else{
+                                        Log.v("ccccc", "PartC = " + array[i]);
+                                        partC_score = array[i].substring(array[i].lastIndexOf("=")+1);
+                                    }
+                                    if(partA_score!= null && partB_score!= null && partC_score != null){
+                                        Log.v("ddddd", "CRTS_score = "+ array[i]);
+                                        crts_score = String.valueOf(Integer.parseInt(partA_score) + Integer.parseInt(partB_score) + Integer.parseInt(partC_score));
+                                        series.appendData(new DataPoint(count,Integer.parseInt(crts_score)), true, 100);
+                                        //series.appendData(new DataPoint(count, count), true, 100);
+                                        series.setDrawDataPoints(true);
+                                        graphView.removeAllSeries();
+                                        graphView.addSeries(series);
+                                        graphView.getViewport().setScalableY(true);
+                                        graphView.getViewport().setScrollableY(true);
+                                        graphView.getViewport().setMinX(0.0);
+                                        graphView.getViewport().setMaxX(4.0);
+                                    }
+                                }
+                                if(array[i].contains("timestamp")){
+                                    timestamp = array[i].substring(array[i]
+                                            .indexOf("=")+1);
+                                    String taskDate = timestamp.substring(0, timestamp.indexOf(" "));
+                                    String taskTime = timestamp.substring(timestamp.indexOf(" ")+1, timestamp.lastIndexOf(":"));
+                                    tasks.add(new TaskItem(String.valueOf(count), taskDate, taskTime));
+                                    taskListViewAdapter.notifyDataSetChanged();
+                                    count++;
+                                }
+                            }
+
+
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                Button add_crts = (Button) view.findViewById(R.id.crts_add);
+
+                add_crts.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(view.getContext(), CRTS_TaskActivity.class);
+                        intent.putExtra("Clinic_ID",Clinic_ID);
+                        intent.putExtra("PatientName", PatientName);
+                        intent.putExtra("doc_uid", uid);
+                        intent.putExtra("path", "main");
+                        startActivity(intent);
+                    }
+                });
+
             }
         }
 

@@ -163,7 +163,6 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
                         String task = String.valueOf(Integer.parseInt(updrs_task) + Integer.parseInt(crts_task));
                         String diseaseType = String.valueOf(mData.child("DiseaseType").getValue());
                         if(task.equals("1")&&updrs_task.equals("1")){
-                            Log.v("comehere", "come");
                             patientList.add(new PatientItem("P", id, name, null, null));
                             databasePatientList.child(id).child("DiseaseType").setValue("P");
                         }
@@ -172,10 +171,10 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
                             databasePatientList.child(id).child("DiseaseType").setValue("ET");
                         }
                         else {
-                            if(diseaseType == "P"){
+                            if(diseaseType.equals("P")){
                                 patientList.add(new PatientItem("P", id, name, null, null));
                             }
-                            else if(diseaseType == "ET"){
+                            else if(diseaseType.equals("ET")){
                                 patientList.add(new PatientItem("ET", id, name, null, null));
                             }
                             else{

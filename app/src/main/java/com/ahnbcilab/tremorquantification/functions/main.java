@@ -1,17 +1,21 @@
 package com.ahnbcilab.tremorquantification.functions;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.ahnbcilab.tremorquantification.data.Complex;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-import com.ahnbcilab.tremorquantification.data.Complex;
 
 
 public class main {
@@ -21,40 +25,81 @@ public class main {
 	private static fitting fg;
 	private static double[] Result;
 	private static final int srate = 50;
+	private static int count = 0;
+
+	private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+	private static DatabaseReference firebaseSprial = firebaseDatabase.getReference("Spiral RowData");
+	public static int spiral_count;
+	private static String sspiral_count;
 
 
 	public static double[] main(String args) throws IOException {
 		// TODO Auto-generated method stub
-		double[] resultx = new double[4];		double[] resulty = new double[4];// result of fft
+		double[] resultx = new double[4];      double[] resulty = new double[4];// result of fft
 		double[][] fitting;//result of fitting
 		double[][] fildata;// filled null point data
+
+
 
 		/* read data - skip*/
 		List<Double> orgX = new ArrayList<Double>();
 		List<Double> orgY = new ArrayList<Double>();
 		List<Double> time = new ArrayList<Double>();
-        String csvFile = args;
-        BufferedReader br = null;
-        String line = "";
-        try {
-            br = new BufferedReader(new FileReader(csvFile));
-            br.readLine();
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",+");
-                orgX.add(Double.parseDouble(data[0]));
-                orgY.add(Double.parseDouble(data[1]));
-                time.add(Double.parseDouble(data[2]));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		String csvFile = args;
+		BufferedReader br = null;
+		String line = "";
+		try {
+			firebaseSprial.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+					for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()){
+						spiral_count = (int) dataSnapshot.getChildrenCount() -1;
+						if(spiral_count == -1){
+							sspiral_count = "00";
+
+						}
+						else if(spiral_count < 10){
+							sspiral_count = "0" + spiral_count;
+
+
+						}
+						else{
+							sspiral_count = String.valueOf(spiral_count);
+						}
+					}
+
+
+
+				}
+
+				@Override
+				public void onCancelled(@NonNull DatabaseError databaseError) {
+					Log.v("알림", "Failed"); }
+			});
+			br = new BufferedReader(new FileReader(csvFile));
+			br.readLine();
+			while ((line = br.readLine()) != null) {
+				String[] data = line.split(",+");
+				orgX.add(Double.parseDouble(data[0]));
+				if(sspiral_count == null)
+					sspiral_count = "00";
+				firebaseSprial.child("Task No "+sspiral_count).child("x_position").setValue(orgX);
+				firebaseSprial.child("Task No "+sspiral_count).child("y_position").setValue(orgY);
+				firebaseSprial.child("Task No "+sspiral_count).child("time").setValue(time);
+				orgY.add(Double.parseDouble(data[1]));
+				time.add(Double.parseDouble(data[2]));
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 
 		/* data setting - must do */
 		int n = time.size();
-		Complex[] x = new Complex[n];		Complex[] y = new Complex[n];
+		Complex[] x = new Complex[n];      Complex[] y = new Complex[n];
 
 		//pre-processing
 
@@ -62,6 +107,7 @@ public class main {
 		fildata = new double[2][n];
 		fildata[0] = fn.FillNull(orgX,n);
 		fildata[1] = fn.FillNull(orgY,n);
+
 
 		for (int i = 0; i < n; i++) {
 			x[i] = new Complex(fildata[0][i], 0);
@@ -79,31 +125,39 @@ public class main {
 		fitting = new double[m][2];
 		fg = new fitting();
 
+		//make position listarray to array
+		double[] x_position = new double[n];
+		double[] y_position = new double[n];
+		int size = 0;
+		for(double temp: orgX)
+		{
+			x_position[size++] = temp;
+			if(temp == n)
+				break;
+		}
+		size = 0;
+		for(double temp: orgY)
+		{
+			y_position[size++] = temp;
+			if(temp == n)
+				break;
+		}
+
 		/* ******************************** fitting *************************************/
 		for(int k = 0 ; k < m; k++) {
 
-			int length = (int) Math.pow(2, slice.get(k));
-			totalL = totalL + length;
-			Complex[] xi = new Complex[length];			Complex[] yi= new Complex[length];		double[] ti = new double[length];
-			for (int i = 0; i < length; i++) {
-				xi[i] = x[start + i];
-				yi[i] = y[start + i];
-				ti[i] = time.get(i);
-			}
-			start = start + length;
-			Complex[] fifftx = ft.fft(xi);        Complex[] fiffty = ft.fft(yi);
 
-			float[] index = new float[length/2];
-			for(int j = 0; j < length/2 ; j++)
-				index[j] = (float)srate*(float)j/(float)length;
+			fitting[k] =  fg.fitting(x_position, y_position, n);
 
-			fitting[k] =  fg.fitting(fifftx, fiffty,index, ti);
+
 		}
+
+
 
 		/* ******************************** FFT *****************************************/
 		int padlen = ds.calN(n);
-		Complex[] xi = new Complex[padlen];			Complex[] yi= new Complex[padlen];
-		xi = ds.zeropadding(x, padlen); 		yi = ds.zeropadding(y, padlen);
+		Complex[] xi = new Complex[padlen];         Complex[] yi= new Complex[padlen];
+		xi = ds.zeropadding(x, padlen);       yi = ds.zeropadding(y, padlen);
 		Complex[] fftx = ft.fft(xi);        Complex[] ffty = ft.fft(yi);
 
 		// change the data type: Complex ---> double
@@ -138,10 +192,9 @@ public class main {
 		for(int j = 4; j < 6 ; j++) {
 			Result[j] = 0;
 			for(int i = 0; i < m ; i++) {
-				float ratio = (float)Math.pow(2, slice.get(i))/ (float)totalL;
-				Result[j] = Result[j] + fitting[i][j - 4 ] * ratio;
+				Result[j] = fitting[i][j-4];
 			}
 		}
-        return Result;
+		return Result;
 	}
 }

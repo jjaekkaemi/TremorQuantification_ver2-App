@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.ahnbcilab.tremorquantification.data.Spiral;
 import com.ahnbcilab.tremorquantification.data.SpiralData;
 import com.ahnbcilab.tremorquantification.data.SurveyData;
 import com.github.mikephil.charting.animation.Easing;
@@ -36,8 +37,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SpiralResultActivity extends AppCompatActivity {
-    int c14 = 0;
-    int crts_count;
     int res ;
     int spiral_count;
     String sspiral_count;
@@ -51,30 +50,26 @@ public class SpiralResultActivity extends AppCompatActivity {
 
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference databaseCRTS;
-    DatabaseReference databaseSpiral;
+    DatabaseReference databasepatient;
+    DatabaseReference databaseclinicID;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spiral_result);
-        final RadioButton c14_0 = findViewById(R.id.crts14_0);
-        final RadioButton c14_1 = findViewById(R.id.crts14_1);
-        final RadioButton c14_2 = findViewById(R.id.crts14_2);
-        final RadioButton c14_3 = findViewById(R.id.crts14_3);
-        final RadioButton c14_4 = findViewById(R.id.crts14_4);
+
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Intent intent = getIntent();
         final double[] result = intent.getDoubleArrayExtra("result");
         String path1 = intent.getStringExtra("path1");
-        crts_count = intent.getIntExtra("crts_count", -1);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String uid = user.getUid();
-        final String PatientId = intent.getStringExtra("PatientId");
+        final String uid = intent.getStringExtra("doc_uid");
+        final String PatientName = intent.getStringExtra("PatientName");
+        final String Clinic_ID = intent.getStringExtra("Clinic_ID");
 
-        databaseSpiral = firebaseDatabase.getReference("SpiralList");
-        databaseSpiral.addValueEventListener(new ValueEventListener() {
+        databasepatient = firebaseDatabase.getReference("PatientList");
+        databaseclinicID = databasepatient.child(Clinic_ID).child("Spiral List");
+        databaseclinicID.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()) {
@@ -96,7 +91,7 @@ public class SpiralResultActivity extends AppCompatActivity {
         });
 
 
-        if(path1.equals("maintask")){
+        if(path1.equals("main")){
 
             chartOption(result[2], 2f, "chart1","Amplitude");
             chartOption(result[3], 3f, "chart2","Hz");
@@ -110,17 +105,39 @@ public class SpiralResultActivity extends AppCompatActivity {
                     String path1 = "Spiral_Test";
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
                     final String timestamp = sdf.format(d);
-                    SurveyData survey = new SurveyData(PatientId, timestamp, uid, spiral_count);
-                    SpiralData spiral = new SpiralData(result[2], result[3],result[4],path1);
+                    Spiral spiral = new Spiral(timestamp, spiral_count);
+                    SpiralData spiraldata = new SpiralData(result[2], result[3],result[4],path1);
                     if(spiral_count == 0){
                         sspiral_count = "00";
                     }
-                    databaseSpiral.child("Task No " + sspiral_count).setValue(survey);
-                    databaseSpiral.child("Task No " + sspiral_count).child("Spiral_Result").setValue(spiral);
+                    databaseclinicID.child("Task No " + sspiral_count).setValue(spiral);
+                    databaseclinicID.child("Task No " + sspiral_count).child("Spiral_Result").setValue(spiraldata);
+
+                    databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                Long crts_count = childDataSnapshot.child("CRTS List").getChildrenCount();
+                                Long updrs_count = childDataSnapshot.child("UPDRS List").getChildrenCount();
+                                Long spiral_count = childDataSnapshot.child("Spiral List").getChildrenCount();
+                                databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
                     // Start NewActivity.class
                     Intent myIntent = new Intent(SpiralResultActivity.this,
-                            SurveyListActivity.class);
+                            PersonalPatient.class);
+                    myIntent.putExtra("ClinicID", Clinic_ID);
+                    myIntent.putExtra("PatientName", PatientName);
+                    myIntent.putExtra("doc_uid", uid);
+                    myIntent.putExtra("task", "SPIRAL TASK");
+
                     startActivity(myIntent);
                 }
             });
@@ -132,40 +149,45 @@ public class SpiralResultActivity extends AppCompatActivity {
 
             Button Fbtn = (Button)findViewById(R.id.Gosurvey);
             Fbtn.setOnClickListener(new View.OnClickListener() {
-
                 public void onClick(View arg0) {
-                    Date d2 = new Date();
+
+                    Date d = new Date();
                     String path1 = "CRTS_Test";
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-                    final String timestamp2 = sdf2.format(d2);
-                    SurveyData survey2 = new SurveyData(PatientId, timestamp2, uid, spiral_count);
-                    SpiralData spiral2 = new SpiralData(result[2], result[3], result[4],path1);
-                    databaseSpiral.child("Task No " + sspiral_count).setValue(survey2);
-                    databaseSpiral.child("Task No " + sspiral_count).child("Spiral_Result").setValue(spiral2);
-
-                    if (c14_0.isChecked()) {
-                        c14 = 0;
-                    } else if (c14_1.isChecked()) {
-                        c14 = 1;
-                    } else if (c14_2.isChecked()) {
-                        c14 = 2;
-                    } else if (c14_3.isChecked()) {
-                        c14 = 3;
-                    } else if (c14_4.isChecked()) {
-                        c14 = 4;
-                    } else {
-                        c14 = -1;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                    final String timestamp = sdf.format(d);
+                    Spiral spiral = new Spiral(timestamp, spiral_count);
+                    SpiralData spiraldata = new SpiralData(result[2], result[3],result[4],path1);
+                    if(spiral_count == 0){
+                        sspiral_count = "00";
                     }
+                    databaseclinicID.child("Task No " + sspiral_count).setValue(spiral);
+                    databaseclinicID.child("Task No " + sspiral_count).child("Spiral_Result").setValue(spiraldata);
 
+                    databasepatient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                Long crts_count = childDataSnapshot.child("CRTS List").getChildrenCount();
+                                Long updrs_count = childDataSnapshot.child("UPDRS List").getChildrenCount();
+                                Long spiral_count = childDataSnapshot.child("Spiral List").getChildrenCount();
+                                databasepatient.child(Clinic_ID).child("TaskNo").setValue(crts_count+updrs_count+spiral_count);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
                     // Start NewActivity.class
-                    Intent myIntent = new Intent(getApplication(),
+                    Intent myIntent = new Intent(SpiralResultActivity.this,
                             CRTS_TaskActivity.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    myIntent.putExtra("path", "spiralTask");
-                    myIntent.putExtra("patientId", PatientId);
+                    myIntent.putExtra("Clinic_ID", Clinic_ID);
+                    myIntent.putExtra("PatientName", PatientName);
                     myIntent.putExtra("doc_uid", uid);
-                    myIntent.putExtra("c14", c14);
+                    myIntent.putExtra("path", path1);
+
                     startActivity(myIntent);
                 }
             });

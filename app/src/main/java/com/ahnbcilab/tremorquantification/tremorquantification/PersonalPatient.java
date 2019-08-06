@@ -155,6 +155,12 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
                 tran.commit();
                 break;
             case 2:
+                Bundle bundle3 = new Bundle();
+                bundle3.putString("Clinic_ID", Clinic_ID);
+                bundle3.putString("PatientName", PatientName);
+                bundle3.putString("doc_uid", uid);
+                bundle3.putString("path", "main");
+                frag3.setArguments(bundle3);
                 tran.replace(R.id.main_frame, frag3);  //replace의 매개변수는 (프래그먼트를 담을 영역 id, 프래그먼트 객체) 입니다.
                 tran.commit();
                 break;

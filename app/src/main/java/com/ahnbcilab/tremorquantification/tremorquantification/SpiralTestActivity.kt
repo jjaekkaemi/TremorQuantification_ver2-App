@@ -24,13 +24,17 @@ import com.ahnbcilab.tremorquantification.tremorquantification.R.drawable.view
 import kotlinx.android.synthetic.main.activity_spiral_test.*
 import java.io.File
 import java.io.PrintWriter
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SpiralTestActivity : AppCompatActivity() {
-    private val patientId: Int by lazy { intent.extras.getInt("patientId") }
-    private val filename: String by lazy { intent.extras.getString("filename") }
+
+    var filename : String = ""
     var path1 : String = ""
-    var PatientId : String = ""
-    var crts_count : Int = 0
+    var Clinic_ID : String = ""
+    var PatientName : String = ""
+    var uid : String = ""
+    var path : String = ""
 
     private var currentX: Float = 0.toFloat()
     private var currentY: Float = 0.toFloat()
@@ -51,17 +55,14 @@ class SpiralTestActivity : AppCompatActivity() {
 
         val intent = intent
         path1 = intent.getStringExtra("path")
-        PatientId = intent.getStringExtra("PatientId")
-        crts_count = intent.getIntExtra("crts_count", -1)
+        Clinic_ID = intent.getStringExtra("Clinic_ID")
+        PatientName = intent.getStringExtra("PatientName")
+        uid = intent.getStringExtra("doc_uid")
 
-
-        Log.v("Here!!!", "SpiralTest" + path1)
-        Log.v("Here!!!", "SpiralTest P : " + PatientId)
-        Log.v("Here!!!", "SpiralTest p : " + patientId)
+        filename = SimpleDateFormat("yyyyMMdd_HH_mm").format(Calendar.getInstance().time)
 
 
         val layout = canvasLayout
-
         val view = DrawView(this)
         val baseLine = baseView(this)
         layout.addView(view)
@@ -73,11 +74,10 @@ class SpiralTestActivity : AppCompatActivity() {
             view.clearLayout()
             val intent = Intent(this, SpiralTestActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            intent.putExtra("patientId", patientId)
-            intent.putExtra("PatientId", PatientId)
+            intent.putExtra("Clinic_ID", Clinic_ID)
             intent.putExtra("filename", filename)
-            intent.putExtra("crts_count", crts_count)
             intent.putExtra("path", path1)
+            intent.putExtra("doc_uid", uid)
             startActivity(intent)
         }
 
@@ -99,10 +99,10 @@ class SpiralTestActivity : AppCompatActivity() {
                 }
             }
 
-            val metaData= "${CurrentUserData.user?.uid},$patientId,$filename"
+            val metaData= "${CurrentUserData.user?.uid},$Clinic_ID,$filename"
             val path = File("${this.filesDir.path}/testData") // raw save to file dir(data/com.bcilab....)
             if (!path.exists()) path.mkdirs()
-            val file = File(path, "${patientId}_$filename.csv")
+            val file = File(path, "${Clinic_ID}_$filename.csv")
             try {
                 PrintWriter(file).use { out ->
                     out.println(metaData)
@@ -115,10 +115,11 @@ class SpiralTestActivity : AppCompatActivity() {
             }
 
             val intent = Intent(this, AnalysisActivity::class.java)
-            intent.putExtra("filename", "${patientId}_$filename.csv")
+            intent.putExtra("filename", "${Clinic_ID}_$filename.csv")
             intent.putExtra("path1", path1)
-            intent.putExtra("PatientId", PatientId)
-            intent.putExtra("crts_count", crts_count)
+            intent.putExtra("Clinic_ID", Clinic_ID)
+            intent.putExtra("PatientName", PatientName)
+            intent.putExtra("doc_uid", uid)
             startActivity(intent)
             Toast.makeText(this, "Wait...", Toast.LENGTH_LONG).show()
         }

@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp"/>
+
+
+    <Button
+        android:id="@+id/crts_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CRTS"
-        android:textSize="40dp"/>
+        android:text="crts_add"
+        />
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +33,7 @@
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="400dip"
-        android:id="@+id/updrs_graph" />
+        android:id="@+id/crts_graph" />
 
     <TextView
         android:layout_width="match_parent"
@@ -29,7 +42,35 @@
         android:textColor="@color/colorPrimary"
         android:textSize="70sp"/>
 
-    <ListView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:text="Date" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:text=""
+            android:textSize="5dp"/>
+
+        <View
+            android:layout_width="743dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="30sp"
+            android:layout_centerInParent="true"
+            android:background="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:text=""
+            android:textSize="5dp"/>
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/personal_crts_taskList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -40,4 +81,6 @@
         android:layout_gravity="center"
         android:layout="@layout/empty"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
