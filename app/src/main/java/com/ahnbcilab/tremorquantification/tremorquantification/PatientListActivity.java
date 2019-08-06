@@ -152,16 +152,22 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
                 recyclerViewAdapter.clear();
                 for (DataSnapshot mData : dataSnapshot.getChildren()) {
                     String msg = mData.getValue().toString();
-                    Log.v("disease", msg);
+                    String id = null, name = null, updrs_task, crts_task, task, diseaseType;
                     if (msg.contains(user.getUid())) {
                         String result = msg.substring(1, msg.length());
                         String[] array = result.split(", |\\}");
-                        String id = array[4].substring(array[4].lastIndexOf("=")+1);
-                        String name = array[2].substring(array[2].lastIndexOf("=") + 1);
-                        String updrs_task = String.valueOf(mData.child("UPDRS List").getChildrenCount());
-                        String crts_task = String.valueOf(mData.child("CRTS List").getChildrenCount());
-                        String task = String.valueOf(Integer.parseInt(updrs_task) + Integer.parseInt(crts_task));
-                        String diseaseType = String.valueOf(mData.child("DiseaseType").getValue());
+                        for(int i = 0; i < array.length; i++){
+                            if(array[i].contains("ClinicID")){
+                                id = array[i].substring(array[i].indexOf("=") + 1);
+                            }
+                            if(array[i].contains("ClinicName")){
+                                name = array[i].substring(array[i].indexOf("=") + 1);
+                            }
+                        }
+                         updrs_task = String.valueOf(mData.child("UPDRS List").getChildrenCount());
+                         crts_task = String.valueOf(mData.child("CRTS List").getChildrenCount());
+                         task = String.valueOf(Integer.parseInt(updrs_task) + Integer.parseInt(crts_task));
+                         diseaseType = String.valueOf(mData.child("DiseaseType").getValue());
                         if(task.equals("1")&&updrs_task.equals("1")){
                             patientList.add(new PatientItem("P", id, name, null, null));
                             databasePatientList.child(id).child("DiseaseType").setValue("P");

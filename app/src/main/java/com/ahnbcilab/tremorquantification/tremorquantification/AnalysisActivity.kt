@@ -14,6 +14,7 @@ class AnalysisActivity : AppCompatActivity() {
     var Clinic_ID : String = ""
     var PatientName : String = ""
     var uid : String = ""
+    var task: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +25,7 @@ class AnalysisActivity : AppCompatActivity() {
         Clinic_ID = intent.getStringExtra("Clinic_ID")
         PatientName = intent.getStringExtra("PatientName")
         uid = intent.getStringExtra("doc_uid")
+        task = intent.getStringExtra("task")
 
 
         val dialog = ProgressDialog(this)
@@ -41,13 +43,24 @@ class AnalysisActivity : AppCompatActivity() {
 
         dialog.dismiss()
 
-        val intent1 = Intent(this, SpiralResultActivity::class.java)
-        intent1.putExtra("result", result)
-        intent1.putExtra("path1", path1)
-        intent1.putExtra("Clinic_ID", Clinic_ID)
-        intent1.putExtra("PatientName", PatientName)
-        intent1.putExtra("doc_uid", uid)
-        startActivity(intent1)
+        if(task.equals("SpiralTask")){
+            val intent1 = Intent(this, SpiralResultActivity::class.java)
+            intent1.putExtra("result", result)
+            intent1.putExtra("path1", path1)
+            intent1.putExtra("Clinic_ID", Clinic_ID)
+            intent1.putExtra("PatientName", PatientName)
+            intent1.putExtra("doc_uid", uid)
+            startActivity(intent1)
+        }
+        else{
+            val intent1 = Intent(this, LineResultActivity::class.java)
+            intent1.putExtra("result", result)
+            intent1.putExtra("path1", path1)
+            intent1.putExtra("Clinic_ID", Clinic_ID)
+            intent1.putExtra("PatientName", PatientName)
+            intent1.putExtra("doc_uid", uid)
+            startActivity(intent1)
+        }
 
     }
 

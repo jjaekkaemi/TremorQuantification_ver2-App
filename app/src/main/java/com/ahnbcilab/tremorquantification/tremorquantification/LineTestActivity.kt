@@ -20,21 +20,23 @@ import com.ahnbcilab.tremorquantification.data.PathTraceData
 import com.ahnbcilab.tremorquantification.functions.Drawable
 import com.ahnbcilab.tremorquantification.functions.fitting
 import com.ahnbcilab.tremorquantification.functions.main
+import com.ahnbcilab.tremorquantification.tremorquantification.LineTestActivity.baseView
 import com.ahnbcilab.tremorquantification.tremorquantification.R.drawable.view
+import kotlinx.android.synthetic.main.activity_line_test.*
 import kotlinx.android.synthetic.main.activity_spiral_test.*
 import java.io.File
 import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SpiralTestActivity : AppCompatActivity() {
+class LineTestActivity : AppCompatActivity() {
 
-    var filename : String = ""
-    var path1 : String = ""
-    var Clinic_ID : String = ""
-    var PatientName : String = ""
-    var uid : String = ""
-    var path : String = ""
+    var filename: String = ""
+    var path1: String = ""
+    var Clinic_ID: String = ""
+    var PatientName: String = ""
+    var uid: String = ""
+    var path: String = ""
 
     private var currentX: Float = 0.toFloat()
     private var currentY: Float = 0.toFloat()
@@ -51,7 +53,7 @@ class SpiralTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        setContentView(R.layout.activity_spiral_test)
+        setContentView(R.layout.activity_line_test)
 
         val intent = intent
         path1 = intent.getStringExtra("path")
@@ -62,17 +64,17 @@ class SpiralTestActivity : AppCompatActivity() {
         filename = SimpleDateFormat("yyyyMMdd_HH_mm").format(Calendar.getInstance().time)
 
 
-        val layout = canvasLayout
+        val layout = canvasLayout1
         val view = DrawView(this)
         val baseLine = baseView(this)
         layout.addView(view)
         layout.addView(baseLine)
 
         // 그림 그릴 때, 다시 그리는 버튼
-        resetBtn.setOnClickListener {
+        resetBtn1.setOnClickListener {
             timer.cancel()
             view.clearLayout()
-            val intent = Intent(this, SpiralTestActivity::class.java)
+            val intent = Intent(this, LineTestActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             intent.putExtra("Clinic_ID", Clinic_ID)
             intent.putExtra("filename", filename)
@@ -82,7 +84,7 @@ class SpiralTestActivity : AppCompatActivity() {
         }
 
         // 그림 그리고 나서, 다음으로 넘어가는 버튼
-        nextBtn.setOnClickListener {
+        nextBtn1.setOnClickListener {
             timer.cancel()
             //view.saveAsJPG(view, this.filesDir.path + "/spiralTest", "${patientId}_$filename.jpg")
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,7 @@ class SpiralTestActivity : AppCompatActivity() {
                 }
             }
 
-            val metaData= "${CurrentUserData.user?.uid},$Clinic_ID,$filename"
+            val metaData = "${CurrentUserData.user?.uid},$Clinic_ID,$filename"
             val path = File("${this.filesDir.path}/testData") // raw save to file dir(data/com.bcilab....)
             if (!path.exists()) path.mkdirs()
             val file = File(path, "${Clinic_ID}_$filename.csv")
@@ -109,7 +111,7 @@ class SpiralTestActivity : AppCompatActivity() {
                     for (item in pathTrace)
                         out.println(item.joinToString(","))
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 Toast.makeText(this, "Error on writing file", Toast.LENGTH_LONG).show()
                 println(e.message)
             }
@@ -120,7 +122,7 @@ class SpiralTestActivity : AppCompatActivity() {
             intent.putExtra("Clinic_ID", Clinic_ID)
             intent.putExtra("PatientName", PatientName)
             intent.putExtra("doc_uid", uid)
-            intent.putExtra("task", "SpiralTask")
+            intent.putExtra("task", "LineTask")
             startActivity(intent)
             Toast.makeText(this, "Wait...", Toast.LENGTH_LONG).show()
         }
@@ -134,7 +136,7 @@ class SpiralTestActivity : AppCompatActivity() {
             currentX = event.x
             currentY = event.y
 
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     if (!flag) {
                         flag = true
@@ -153,16 +155,20 @@ class SpiralTestActivity : AppCompatActivity() {
     }
 
     inner class baseView(context: Context): View(context) {
-        private val startX = this.resources.displayMetrics.widthPixels / 2
+        private val startX = 0
         private val startY = this.resources.displayMetrics.heightPixels / 2
 
-        private val theta = FloatArray(720) { (it * (Math.PI / 180)).toFloat() }
+        private val finalX = this.resources.displayMetrics.widthPixels
+        private val finalY = this.resources.displayMetrics.heightPixels / 2
+
+
+        //private val theta = FloatArray(720) { (it * (Math.PI / 180)).toFloat() }
         private val basePath = Path()
         private val basePaint = Paint()
 
         init {
             basePaint.style = Paint.Style.STROKE
-            basePaint.strokeWidth = 3f
+            basePaint.strokeWidth = 10f
             basePaint.alpha = 50
             basePaint.isAntiAlias = true
             fitting.startX = startX
@@ -171,10 +177,10 @@ class SpiralTestActivity : AppCompatActivity() {
 
         override fun onDraw(canvas: Canvas) {
             basePath.moveTo(startX.toFloat(), startY.toFloat())
-            for (t in theta)
-                basePath.lineTo((t * Math.cos(2.5 * t) * 50 + startX).toFloat(), (t * Math.sin(2.5 * t) * 50 + startY).toFloat())
+            basePath.lineTo(finalX.toFloat(), finalY.toFloat())
 
             canvas.drawPath(basePath, basePaint)
         }
     }
+
 }

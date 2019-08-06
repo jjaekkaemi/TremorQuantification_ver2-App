@@ -76,6 +76,7 @@
             android:id="@+id/bt1"
             android:layout_width="121dp"
             android:layout_height="47dp"
+            android:layout_marginStart="40sp"
             android:background="@drawable/select"
             android:text="UPDRS"
             android:textColor="#37BFA7" />
@@ -84,7 +85,7 @@
             android:id="@+id/bt2"
             android:layout_width="121dp"
             android:layout_height="51dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:background="@drawable/nonselect"
             android:text="CRTS"
             android:textColor="#ffffff"></Button>
@@ -93,9 +94,27 @@
             android:id="@+id/bt3"
             android:layout_width="121dp"
             android:layout_height="51dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:background="@drawable/nonselect"
             android:text="Spiral Task"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/bt4"
+            android:layout_width="121dp"
+            android:layout_height="51dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/nonselect"
+            android:text="Line Task"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/bt5"
+            android:layout_width="121dp"
+            android:layout_height="51dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/nonselect"
+            android:text="Gear"
             android:textColor="#ffffff" />
     </LinearLayout>
 

@@ -98,7 +98,6 @@ public class CRTS_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()) {
                     temp_count = (int) dataSnapshot.getChildrenCount();
-                    Log.v("hello!", "" + temp_count);
                     writeToFile(String.valueOf(temp_count), view.getContext());
                     //writeToFile(String.valueOf("0"), view.getContext());
                 }
@@ -129,30 +128,23 @@ public class CRTS_Fragment extends Fragment {
                         GraphView graphView = (GraphView) view.findViewById(R.id.crts_graph);
                         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                         series.appendData(new DataPoint(0,0), true, 100);
-                        //recyclerViewAdapter.clear();
                         for (DataSnapshot mData : dataSnapshot.getChildren()){
                             String msg = mData.child("CRTS List").getValue().toString();
                             String[] array = msg.split(", |\\}");
                             for(int i=0; i<array.length; i++){
                                 if(array[i].contains("partC_score") || array[i].contains("partB_score") || array[i].contains("partA_score")){
-                                    Log.v("ddddd", array[i]);
                                     if(array[i].contains("partA_score")){
-                                        Log.v("ccccc", "PartA = " + array[i]);
                                         partA_score = array[i].substring(array[i].indexOf("=")+1);
                                     }
                                     else if(array[i].contains("partB_score")){
-                                        Log.v("ccccc", "PartB = " + array[i]);
                                         partB_score = array[i].substring(array[i].indexOf("=")+1);
                                     }
                                     else{
-                                        Log.v("ccccc", "PartC = " + array[i]);
                                         partC_score = array[i].substring(array[i].lastIndexOf("=")+1);
                                     }
                                     if(partA_score!= null && partB_score!= null && partC_score != null){
-                                        Log.v("ddddd", "CRTS_score = "+ array[i]);
                                         crts_score = String.valueOf(Integer.parseInt(partA_score) + Integer.parseInt(partB_score) + Integer.parseInt(partC_score));
                                         series.appendData(new DataPoint(count,Integer.parseInt(crts_score)), true, 100);
-                                        //series.appendData(new DataPoint(count, count), true, 100);
                                         series.setDrawDataPoints(true);
                                         graphView.removeAllSeries();
                                         graphView.addSeries(series);

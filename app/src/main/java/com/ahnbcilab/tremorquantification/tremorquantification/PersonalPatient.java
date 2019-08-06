@@ -12,12 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class PersonalPatient extends AppCompatActivity implements View.OnClickListener{
-    Button fb1,fb2,fb3;
+    Button fb1,fb2,fb3,fb4,fb5;
     FragmentManager fm;
     FragmentTransaction tran;
     UPDRS_Fragment frag1;
     CRTS_Fragment frag2;
     SpiralTask_Fragment frag3;
+    LineTask_Fragment frag4;
+    Gear_Fragment frag5;
     String Clinic_ID;
     String PatientName;
     String uid;
@@ -44,24 +46,35 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
         fb1 = (Button) findViewById(R.id.bt1);
         fb2 = (Button) findViewById(R.id.bt2);
         fb3 = (Button) findViewById(R.id.bt3);
+        fb4 = (Button) findViewById(R.id.bt4);
+        fb5 = (Button) findViewById(R.id.bt5);
+
         fb1.setOnClickListener(this);
         fb2.setOnClickListener(this);
         fb3.setOnClickListener(this);
+        fb4.setOnClickListener(this);
+        fb5.setOnClickListener(this);
         frag1 = new UPDRS_Fragment(); //프래그먼트 객채셍성
         frag2 = new CRTS_Fragment(); //프래그먼트 객채셍성
         frag3 = new SpiralTask_Fragment(); //프래그먼트 객채셍성
+        frag4 = new LineTask_Fragment();
+        frag5 = new Gear_Fragment();
+        setFrag(0);
 
 
 
         // 완료한 task에 맞게 레이아웃 변경
         if(task.equals("CRTS")){
-            Log.v("taskname", "들어와");
             fb1.setBackgroundResource(R.drawable.nonselect);
             fb1.setTextColor(Color.parseColor("#FFFFFF"));
             fb2.setBackgroundResource(R.drawable.select);
             fb2.setTextColor(Color.parseColor("#37BFA7"));
             fb3.setBackgroundResource(R.drawable.nonselect);
             fb3.setTextColor(Color.parseColor("#FFFFFF"));
+            fb4.setBackgroundResource(R.drawable.nonselect);
+            fb4.setTextColor(Color.parseColor("#FFFFFF"));
+            fb5.setBackgroundResource(R.drawable.nonselect);
+            fb5.setTextColor(Color.parseColor("#FFFFFF"));
             setFrag(1);
         }
         else if(task.equals("SPIRAL TASK")){
@@ -71,7 +84,37 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
             fb2.setTextColor(Color.parseColor("#FFFFFF"));
             fb3.setBackgroundResource(R.drawable.select);
             fb3.setTextColor(Color.parseColor("#37BFA7"));
+            fb4.setBackgroundResource(R.drawable.nonselect);
+            fb4.setTextColor(Color.parseColor("#FFFFFF"));
+            fb5.setBackgroundResource(R.drawable.nonselect);
+            fb5.setTextColor(Color.parseColor("#FFFFFF"));
             setFrag(2);
+        }
+        else if(task.equals("GEAR")){
+            fb1.setBackgroundResource(R.drawable.nonselect);
+            fb1.setTextColor(Color.parseColor("#FFFFFF"));
+            fb2.setBackgroundResource(R.drawable.nonselect);
+            fb2.setTextColor(Color.parseColor("#FFFFFF"));
+            fb3.setBackgroundResource(R.drawable.nonselect);
+            fb3.setTextColor(Color.parseColor("#FFFFFF"));
+            fb4.setBackgroundResource(R.drawable.nonselect);
+            fb4.setTextColor(Color.parseColor("#FFFFFF"));
+            fb5.setBackgroundResource(R.drawable.select);
+            fb5.setTextColor(Color.parseColor("#37BFA7"));
+            setFrag(4);
+        }
+        else if(task.equals("LINE TASK")){
+            fb1.setBackgroundResource(R.drawable.nonselect);
+            fb1.setTextColor(Color.parseColor("#FFFFFF"));
+            fb2.setBackgroundResource(R.drawable.nonselect);
+            fb2.setTextColor(Color.parseColor("#FFFFFF"));
+            fb3.setBackgroundResource(R.drawable.nonselect);
+            fb3.setTextColor(Color.parseColor("#FFFFFF"));
+            fb4.setBackgroundResource(R.drawable.select);
+            fb4.setTextColor(Color.parseColor("#37BFA7"));
+            fb5.setBackgroundResource(R.drawable.nonselect);
+            fb5.setTextColor(Color.parseColor("#FFFFFF"));
+            setFrag(3);
         }
         else{
             fb1.setBackgroundResource(R.drawable.select);
@@ -80,6 +123,10 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
             fb2.setTextColor(Color.parseColor("#FFFFFF"));
             fb3.setBackgroundResource(R.drawable.nonselect);
             fb3.setTextColor(Color.parseColor("#FFFFFF"));
+            fb4.setBackgroundResource(R.drawable.nonselect);
+            fb4.setTextColor(Color.parseColor("#FFFFFF"));
+            fb5.setBackgroundResource(R.drawable.nonselect);
+            fb5.setTextColor(Color.parseColor("#FFFFFF"));
             setFrag(0);
         }
 
@@ -107,6 +154,10 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
                 fb2.setTextColor(Color.parseColor("#FFFFFF"));
                 fb3.setBackgroundResource(R.drawable.nonselect);
                 fb3.setTextColor(Color.parseColor("#FFFFFF"));
+                fb4.setBackgroundResource(R.drawable.nonselect);
+                fb4.setTextColor(Color.parseColor("#FFFFFF"));
+                fb5.setBackgroundResource(R.drawable.nonselect);
+                fb5.setTextColor(Color.parseColor("#FFFFFF"));
                 setFrag(0);
                 break;
             case R.id.bt2:
@@ -116,6 +167,10 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
                 fb2.setTextColor(Color.parseColor("#37BFA7"));
                 fb3.setBackgroundResource(R.drawable.nonselect);
                 fb3.setTextColor(Color.parseColor("#FFFFFF"));
+                fb4.setBackgroundResource(R.drawable.nonselect);
+                fb4.setTextColor(Color.parseColor("#FFFFFF"));
+                fb5.setBackgroundResource(R.drawable.nonselect);
+                fb5.setTextColor(Color.parseColor("#FFFFFF"));
                 setFrag(1);
                 break;
             case R.id.bt3:
@@ -125,7 +180,39 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
                 fb2.setTextColor(Color.parseColor("#FFFFFF"));
                 fb3.setBackgroundResource(R.drawable.select);
                 fb3.setTextColor(Color.parseColor("#37BFA7"));
+                fb4.setBackgroundResource(R.drawable.nonselect);
+                fb4.setTextColor(Color.parseColor("#FFFFFF"));
+                fb5.setBackgroundResource(R.drawable.nonselect);
+                fb5.setTextColor(Color.parseColor("#FFFFFF"));
                 setFrag(2);
+                break;
+
+            case R.id.bt4:
+                fb1.setBackgroundResource(R.drawable.nonselect);
+                fb1.setTextColor(Color.parseColor("#FFFFFF"));
+                fb2.setBackgroundResource(R.drawable.nonselect);
+                fb2.setTextColor(Color.parseColor("#FFFFFF"));
+                fb3.setBackgroundResource(R.drawable.nonselect);
+                fb3.setTextColor(Color.parseColor("#FFFFFF"));
+                fb4.setBackgroundResource(R.drawable.select);
+                fb4.setTextColor(Color.parseColor("#37BFA7"));
+                fb5.setBackgroundResource(R.drawable.nonselect);
+                fb5.setTextColor(Color.parseColor("#FFFFFF"));
+                setFrag(3);
+                break;
+
+            case R.id.bt5:
+                fb1.setBackgroundResource(R.drawable.nonselect);
+                fb1.setTextColor(Color.parseColor("#FFFFFF"));
+                fb2.setBackgroundResource(R.drawable.nonselect);
+                fb2.setTextColor(Color.parseColor("#FFFFFF"));
+                fb3.setBackgroundResource(R.drawable.nonselect);
+                fb3.setTextColor(Color.parseColor("#FFFFFF"));
+                fb4.setBackgroundResource(R.drawable.nonselect);
+                fb4.setTextColor(Color.parseColor("#FFFFFF"));
+                fb5.setBackgroundResource(R.drawable.select);
+                fb5.setTextColor(Color.parseColor("#37BFA7"));
+                setFrag(4);
                 break;
         }
     }
@@ -164,6 +251,21 @@ public class PersonalPatient extends AppCompatActivity implements View.OnClickLi
                 tran.replace(R.id.main_frame, frag3);  //replace의 매개변수는 (프래그먼트를 담을 영역 id, 프래그먼트 객체) 입니다.
                 tran.commit();
                 break;
+            case 3:
+                Bundle bundle4 = new Bundle();
+                bundle4.putString("Clinic_ID", Clinic_ID);
+                bundle4.putString("PatientName", PatientName);
+                bundle4.putString("doc_uid", uid);
+                bundle4.putString("path", "main");
+                frag4.setArguments(bundle4);
+                tran.replace(R.id.main_frame, frag4);  //replace의 매개변수는 (프래그먼트를 담을 영역 id, 프래그먼트 객체) 입니다.
+                tran.commit();
+                break;
+            case 4:
+                tran.replace(R.id.main_frame, frag5);  //replace의 매개변수는 (프래그먼트를 담을 영역 id, 프래그먼트 객체) 입니다.
+                tran.commit();
+                break;
+
         }
     }
 

@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SpiralTestActivity" />
+        <activity android:name=".LineTestActivity" />
+        <activity android:name=".LineResultActivity" />
         <activity android:name=".WrittenConsentActivity" />
         <activity android:name=".AnalysisActivity" />
         <activity android:name=".ResultActivity" />

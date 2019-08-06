@@ -119,7 +119,6 @@ public class UPDRS_Fragment extends Fragment {
         // 환자별 UPDRS_task의 개수가 1개 이상이면 view 바꾸기
         if(file.exists()){
             m = readFromFile(view.getContext());
-            Log.v("aaaaa", m);
             if(Integer.parseInt(m) > 0){
                 view = inflater.inflate(R.layout.task_updrs_fragment, container, false);
                 recyclerView = (RecyclerView) view.findViewById(R.id.personal_updrs_taskList);
@@ -171,6 +170,7 @@ public class UPDRS_Fragment extends Fragment {
 
                     }
                 });
+
 
                 Button updrs_task = (Button) view.findViewById(R.id.updrs_add);
 
