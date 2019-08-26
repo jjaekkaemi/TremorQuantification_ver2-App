@@ -3,49 +3,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/Background"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".PatientListActivity">
 
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
-        android:layout_height="124dp"
+        android:layout_height="233dp"
         android:background="@drawable/rectangle9"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
         android:text="Patients List"
         android:textColor="#FFFFFF"
-        android:textSize="23sp"
+        android:textStyle="bold"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="76dp"
+        android:text="TextView"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/searchPatient"
-        android:layout_width="321dp"
-        android:layout_height="39dp"
+        android:layout_width="392dp"
+        android:layout_height="43dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="148dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/search_window"
         android:ems="10"
-        android:hint="Search by Clinic_ID or Name"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
+        android:hint="     Search by ClinicID or Name"
+        android:textSize="13dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.127"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <android.support.constraint.ConstraintLayout
@@ -58,72 +73,76 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/patientAdd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintHorizontal_bias="0.969"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.444">
+        app:layout_constraintVertical_bias="0.241">
 
         <ImageView
             android:id="@+id/userIcon"
             android:layout_width="22dp"
             android:layout_height="0dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/user_icon" />
 
         <TextView
             android:id="@+id/userAccount"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="21dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:text="TextView"
+            android:textColor="#ffffff"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/userIconPolygon"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/userIcon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/userIconPolygon"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/user_icon_polygon" />
     </android.support.constraint.ConstraintLayout>
 
 
     <Button
         android:id="@+id/patientAdd"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
+        android:layout_width="172dp"
+        android:layout_height="43dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="148dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/button_addpatient"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
+        android:text="Add Patient"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toEndOf="@+id/searchPatient"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.897" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/typeView"
         android:layout_width="40dp"
         android:layout_height="18dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="8dp"
         android:text="All ↓"
@@ -143,22 +162,23 @@
         android:text="Clinic_ID ↓"
         app:layout_constraintBottom_toTopOf="@+id/patientList"
         app:layout_constraintEnd_toStartOf="@+id/patientNameView"
+        app:layout_constraintHorizontal_bias="0.676"
         app:layout_constraintStart_toEndOf="@+id/typeView"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.166" />
 
     <TextView
         android:id="@+id/patientNameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="130dp"
+        android:layout_marginEnd="120dp"
         android:layout_marginBottom="8dp"
         android:text="Name ↓"
         app:layout_constraintBottom_toTopOf="@+id/patientList"
         app:layout_constraintEnd_toStartOf="@+id/dateView"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.19"
+        app:layout_constraintVertical_bias="0.142"
         tools:ignore="UnknownId" />
 
     <TextView
@@ -166,25 +186,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="160dp"
+        android:layout_marginEnd="180dp"
         android:layout_marginBottom="8dp"
         android:text="Date"
         app:layout_constraintBottom_toTopOf="@+id/patientList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.142" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/patientList"
-        android:layout_width="0dp"
-        android:layout_height="1020dp"
+        android:layout_width="790dp"
+        android:layout_height="954dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="48dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars = "false"
+        android:scrollbarThumbVertical="@drawable/thumb_drawable"
+        android:scrollbarTrackHorizontal="@drawable/line_drawable"
+        android:scrollbarTrackVertical="@drawable/line_drawable"
+        android:scrollbarThumbHorizontal="@drawable/thumb_drawable"
+        android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
         tools:ignore="MissingConstraints" />

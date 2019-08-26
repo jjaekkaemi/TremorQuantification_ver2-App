@@ -2,11 +2,10 @@ package com.ahnbcilab.tremorquantification.tremorquantification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,12 +33,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ahnbcilab.tremorquantification.Adapters.AlertDialogHelper;
-import com.ahnbcilab.tremorquantification.Adapters.PatientCardAdapter;
-import com.ahnbcilab.tremorquantification.Adapters.RecyclerItemClickListener;
 import com.ahnbcilab.tremorquantification.Adapters.RecyclerViewAdapter;
 import com.ahnbcilab.tremorquantification.data.DoctorData;
 import com.ahnbcilab.tremorquantification.data.PatientData;
-import com.ahnbcilab.tremorquantification.data.PatientData2;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -56,10 +53,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.*;
 
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -73,14 +71,20 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
     private FirebaseAuth mAuth;
     String name, email, uid, r_uid;
     DatabaseReference databaseDoctor;
+    DatabaseReference databaseUPDRS;
+    DatabaseReference databaseCRTS;
+    DatabaseReference databaseSpiral;
+    DatabaseReference databaseLine;
     ArrayList<String> uid_list = new ArrayList<String>();
     //
     private long lastTimeBackPressed;
 
+    int year, month, year2, month2 ;
     PatientData pd;
     DatabaseReference databasePatient;
     DatabaseReference databasePatientList;
     int taskNo;
+
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -139,6 +143,8 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
         TextView userAccount = (TextView) findViewById(R.id.userAccount);
         userAccount.setText(user.getDisplayName());
 
+        final TextView item_count = (TextView) findViewById(R.id.item_count);
+
         alertDialogHelper = new AlertDialogHelper(this);
         recyclerView = findViewById(R.id.patientList);
 
@@ -146,13 +152,27 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
         uid = user.getUid();
 
         databasePatientList = firebaseDatabase.getReference("PatientList");
+
+        databasePatientList.orderByChild("UserID").equalTo(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int list_count = (int) dataSnapshot.getChildrenCount();
+                item_count.setText("Total " + list_count);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         databasePatientList.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 recyclerViewAdapter.clear();
                 for (DataSnapshot mData : dataSnapshot.getChildren()) {
                     String msg = mData.getValue().toString();
-                    String id = null, name = null, updrs_task, crts_task, task, diseaseType;
+                    String id = null, name = null, updrs_task, crts_task, spiral_task, line_task, task, diseaseType, firstDate, finalDate ="";
                     if (msg.contains(user.getUid())) {
                         String result = msg.substring(1, msg.length());
                         String[] array = result.split(", |\\}");
@@ -164,27 +184,38 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
                                 name = array[i].substring(array[i].indexOf("=") + 1);
                             }
                         }
-                         updrs_task = String.valueOf(mData.child("UPDRS List").getChildrenCount());
-                         crts_task = String.valueOf(mData.child("CRTS List").getChildrenCount());
-                         task = String.valueOf(Integer.parseInt(updrs_task) + Integer.parseInt(crts_task));
-                         diseaseType = String.valueOf(mData.child("DiseaseType").getValue());
+                        updrs_task = String.valueOf(mData.child("UPDRS List").getChildrenCount());
+                        crts_task = String.valueOf(mData.child("CRTS List").getChildrenCount());
+                        spiral_task = String.valueOf(mData.child("Spiral List").getChildrenCount()) ;
+                        line_task = String.valueOf(mData.child("Line List").getChildrenCount()) ;
+                        task = String.valueOf(Integer.parseInt(updrs_task) + Integer.parseInt(crts_task));
+                        diseaseType = String.valueOf(mData.child("DiseaseType").getValue());
+                        firstDate = String.valueOf(mData.child("FirstDate").getValue()) ;
+                        finalDate = String.valueOf(mData.child("FinalDate").getValue()) ;
+
+                        if(firstDate.equals("null")){
+                            firstDate="" ;
+                        }
+                        if(finalDate.equals("null")) {
+                            finalDate="" ;
+                        }
                         if(task.equals("1")&&updrs_task.equals("1")){
-                            patientList.add(new PatientItem("P", id, name, null, null));
+                            patientList.add(new PatientItem("P", id, name, firstDate, finalDate, false));
                             databasePatientList.child(id).child("DiseaseType").setValue("P");
                         }
                         else if(task.equals("1")&&crts_task.equals("1")){
-                            patientList.add(new PatientItem("ET", id, name, null, null));
+                            patientList.add(new PatientItem("ET", id, name, firstDate, finalDate, false));
                             databasePatientList.child(id).child("DiseaseType").setValue("ET");
                         }
                         else {
                             if(diseaseType.equals("P")){
-                                patientList.add(new PatientItem("P", id, name, null, null));
+                                patientList.add(new PatientItem("P", id, name, firstDate, finalDate, false));
                             }
                             else if(diseaseType.equals("ET")){
-                                patientList.add(new PatientItem("ET", id, name, null, null));
+                                patientList.add(new PatientItem("ET", id, name, firstDate, finalDate, false));
                             }
                             else{
-                                patientList.add(new PatientItem(null, id, name, null, null));
+                                patientList.add(new PatientItem(null, id, name, firstDate, finalDate, false));
                             }
                         }
                     }
@@ -206,6 +237,7 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
         final TextView clinicIDView = (TextView) findViewById(R.id.clinicIDView);
         final TextView patientNameView = (TextView) findViewById(R.id.patientNameView);
         final TextView dateView = (TextView) findViewById(R.id.dateView);
+
 
         //타입에 따라 정렬
         typeView.setOnClickListener(new View.OnClickListener() {
@@ -366,11 +398,165 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
             }
         });
 
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ArrayList<PatientItem> filteredList = new ArrayList<>() ;
+                PopupMenu popupMenu = new PopupMenu(PatientListActivity.this, dateView) ;
+                popupMenu.getMenuInflater().inflate(R.menu.menu_date, popupMenu.getMenu()) ;
+                SimpleDateFormat date = new SimpleDateFormat("yyyy/MM/dd");
+                Date day = new Date() ;
+                String today = date.format(day) ;
+                final String[] array = today.split("/") ;
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId()) {
+                            case R.id.id_1개월 :
+                                for(int i = 0 ; i<patientList.size() ; i++) {
+                                    if(patientList.get(i).getDateFirst().equals("")){
+
+                                    }
+                                    else{
+                                        String[] array2 = patientList.get(i).getDateFirst().split("/") ;
+                                        if(array[1].equals("10")||array[1].equals("11")||array[1].equals("12")){
+                                            month = Integer.parseInt(array[1]) ;
+                                        }
+                                        else{
+                                            month = Integer.parseInt(array[1].substring(1,2)) ;
+                                        }
+                                        if(array2[1].equals("10")||array2[1].equals("11")||array2[1].equals("12")){
+                                            month2 = Integer.parseInt(array2[1]) ;
+                                        }
+                                        else{
+                                            month2 = Integer.parseInt(array2[1].substring(1,2)) ;
+                                        }
+                                        if(month==1){
+                                            year = Integer.parseInt(array[0])-1 ;
+                                            month = 12 ;
+                                        }
+                                        else{
+                                            year = Integer.parseInt(array[0]) ;
+                                            month-- ;
+                                        }
+                                        year2 = Integer.parseInt(array2[0]) ;
+                                        if(Integer.parseInt(array2[0])>year){
+                                            filteredList.add(patientList.get(i));
+                                        }
+                                        else if(Integer.parseInt(array2[0])==year){
+                                            if(month2>=month){
+                                                filteredList.add(patientList.get(i));
+                                            }
+                                        }
+                                    }
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(PatientListActivity.this));
+                                    recyclerViewAdapter = new RecyclerViewAdapter(PatientListActivity.this, filteredList, selected_patientList);
+                                    recyclerView.setAdapter(recyclerViewAdapter);
+                                    recyclerViewAdapter.notifyDataSetChanged();
+                                }
+                                return true ;
+
+                            case R.id.id_3개월 :
+                                for(int i = 0 ; i<patientList.size() ; i++) {
+                                    if(patientList.get(i).getDateFirst().equals("")){
+
+                                    }
+                                    else{
+                                        String[] array2 = patientList.get(i).getDateFirst().split("/") ;
+                                        if(array[1].equals("10")||array[1].equals("11")||array[1].equals("12")){
+                                            month = Integer.parseInt(array[1]) ;
+                                        }
+                                        else{
+                                            month = Integer.parseInt(array[1].substring(1,2)) ;
+                                        }
+                                        if(array2[1].equals("10")||array2[1].equals("11")||array2[1].equals("12")){
+                                            month2 = Integer.parseInt(array2[1]) ;
+                                        }
+                                        else{
+                                            month2 = Integer.parseInt(array2[1].substring(1,2)) ;
+                                        }
+                                        if(month<=3){
+                                            year = Integer.parseInt(array[0])-1 ;
+                                            month = 12 + (month - 3) ;
+                                        }
+                                        else{
+                                            year = Integer.parseInt(array[0]) ;
+                                            month= month-3 ;
+                                        }
+                                        year2 = Integer.parseInt(array2[0]) ;
+                                        if(Integer.parseInt(array2[0])>year){
+                                            filteredList.add(patientList.get(i));
+                                        }
+                                        else if(Integer.parseInt(array2[0])==year){
+                                            if(month2>=month){
+                                                filteredList.add(patientList.get(i));
+                                            }
+                                        }
+                                    }
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(PatientListActivity.this));
+                                    recyclerViewAdapter = new RecyclerViewAdapter(PatientListActivity.this, filteredList, selected_patientList);
+                                    recyclerView.setAdapter(recyclerViewAdapter);
+                                    recyclerViewAdapter.notifyDataSetChanged();
+                                }
+                                return true ;
+
+                            case R.id.id_6개월 :
+                                for(int i = 0 ; i<patientList.size() ; i++) {
+                                    if(patientList.get(i).getDateFirst().equals("")){
+
+                                    }
+                                    else{
+                                        String[] array2 = patientList.get(i).getDateFirst().split("/") ;
+                                        if(array[1].equals("10")||array[1].equals("11")||array[1].equals("12")){
+                                            month = Integer.parseInt(array[1]) ;
+                                        }
+                                        else{
+                                            month = Integer.parseInt(array[1].substring(1,2)) ;
+                                        }
+                                        if(array2[1].equals("10")||array2[1].equals("11")||array2[1].equals("12")){
+                                            month2 = Integer.parseInt(array2[1]) ;
+                                        }
+                                        else{
+                                            month2 = Integer.parseInt(array2[1].substring(1,2)) ;
+                                        }
+                                        if(month<=6){
+                                            year = Integer.parseInt(array[0])-1 ;
+                                            month = 12 + (month - 6) ;
+                                        }
+                                        else{
+                                            year = Integer.parseInt(array[0]) ;
+                                            month= month-6 ;
+                                        }
+                                        year2 = Integer.parseInt(array2[0]) ;
+                                        if(Integer.parseInt(array2[0])>year){
+                                            filteredList.add(patientList.get(i));
+                                        }
+                                        else if(Integer.parseInt(array2[0])==year){
+                                            if(month2>=month){
+                                                filteredList.add(patientList.get(i));
+                                            }
+                                        }
+                                    }
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(PatientListActivity.this));
+                                    recyclerViewAdapter = new RecyclerViewAdapter(PatientListActivity.this, filteredList, selected_patientList);
+                                    recyclerView.setAdapter(recyclerViewAdapter);
+                                    recyclerViewAdapter.notifyDataSetChanged();
+                                }
+                                return true ;
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show() ;
+            }
+        });
+
         //환자 등록 버튼
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 show();
+                //getStatusBarSize() ;
             }
         });
 
@@ -441,38 +627,39 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
         recyclerView.setAdapter(recyclerViewAdapter);
 
         //리스트 클릭했을 때 이벤트
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if (isMultiSelect)
-                    multi_select(position);
-                else {
-                    TextView patientClinicID = view.findViewById(R.id.clinicIDItem);
-                    TextView patientClinicName = view.findViewById(R.id.patientNameItem);
-                    Intent intent = new Intent(getApplicationContext(), PersonalPatient.class);
-                    intent.putExtra("ClinicID", patientClinicID.getText());
-                    intent.putExtra("PatientName", patientClinicName.getText());
-                    intent.putExtra("doc_uid", uid);
-                    intent.putExtra("task", "none");
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                if (!isMultiSelect) {
-                    selected_patientList = new ArrayList<PatientItem>();
-                    isMultiSelect = true;
-
-                    if (mActionMode == null) {
-                        mActionMode = startActionMode(mActionModeCallback);
-                    }
-                }
-
-                multi_select(position);
-
-            }
-        }));
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                if (isMultiSelect)
+//                    multi_select(position);
+//                else {
+//                    TextView patientClinicID = view.findViewById(R.id.clinicIDItem);
+//                    TextView patientClinicName = view.findViewById(R.id.patientNameItem);
+//                    LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    Intent intent = new Intent(getApplicationContext(), PersonalPatient.class);
+//                    intent.putExtra("ClinicID", patientClinicID.getText());
+//                    intent.putExtra("PatientName", patientClinicName.getText());
+//                    intent.putExtra("doc_uid", uid);
+//                    intent.putExtra("task", "none");
+//                    startActivity(intent);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemLongClick(View view, int position) {
+//                if (!isMultiSelect) {
+//                    selected_patientList = new ArrayList<PatientItem>();
+//                    isMultiSelect = true;
+//
+//                    if (mActionMode == null) {
+//                        mActionMode = startActionMode(mActionModeCallback);
+//                    }
+//                }
+//
+//                multi_select(position);
+//
+//            }
+//        }));
 //검색 기능
         final EditText searchPatient = (EditText) findViewById(R.id.searchPatient);
         searchPatient.addTextChangedListener(new TextWatcher() {
@@ -541,7 +728,8 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
                     databasePatient.updateChildren(childUpdates);
                     //databasePatient.child(clinic_ID).setValue(patient_Name);
                     //databasePatient.child(clinic_ID).setValue(uid);
-                    //databasePatient.child(clinic_ID).setValue(0);                    patientList.add(new PatientItem(null, clinic_ID, patient_Name, null, null));
+                    //databasePatient.child(clinic_ID).setValue(0);
+                    // patientList.add(new PatientItem(null, clinic_ID, patient_Name, null, null));
                     recyclerViewAdapter = new RecyclerViewAdapter(PatientListActivity.this, patientList, selected_patientList);
                     recyclerView.setAdapter(recyclerViewAdapter);
                     Toast.makeText(getApplicationContext(), "환자 추가", Toast.LENGTH_SHORT).show();
@@ -824,5 +1012,15 @@ public class PatientListActivity extends AppCompatActivity implements AlertDialo
         email = user.getEmail();
         uid = user.getUid();
     }
+    private void getStatusBarSize(){
+        Rect rectgle= new Rect();
+        Window window= getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
+        int StatusBarHeight= rectgle.top;
+        int contentViewTop=
+                window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        int TitleBarHeight= contentViewTop - StatusBarHeight;
+        Log.i("StatusBarTest" , "StatusBar Height= " + StatusBarHeight +
+                " TitleBar Height = " + TitleBarHeight);
+    }
 }
-

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="25dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="1160dp"
+        android:background="@drawable/green_vector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26.5dp"
+        android:layout_marginTop="1045dp"
+        android:background="@drawable/crts_b"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="63.5dp"
+        android:layout_marginTop="1040dp"
+        android:background="@drawable/wr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="364dp"
+        android:background="@drawable/drawing1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <FrameLayout
+        android:id="@+id/writingcanvasLayout"
+        android:layout_width="645dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="90dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/writingfinish"
+        android:layout_width="47dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="732.5dp"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/writingfinish"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/writingagain"
+        android:layout_width="47dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="732.5dp"
+        android:layout_marginTop="1040dp"
+        android:background="@drawable/writingagain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

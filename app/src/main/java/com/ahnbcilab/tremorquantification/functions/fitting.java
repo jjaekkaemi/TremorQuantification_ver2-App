@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class fitting {
 	private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-	private static DatabaseReference firebaseCorr = firebaseDatabase.getReference("CorrTest");
+	//private static DatabaseReference firebaseCorr = firebaseDatabase.getReference("CorrTest");
 
 	private int srate = 50;
 	public static int startX = 0;
@@ -52,10 +52,10 @@ public class fitting {
 
 
 
-		firebaseCorr.child("x_position").setValue(pos_x);
-		firebaseCorr.child("y_position").setValue(pos_y);
-		firebaseCorr.child("base x").setValue(base_x);
-		firebaseCorr.child("base y").setValue(base_y);
+		//firebaseCorr.child("x_position").setValue(pos_x);
+		//firebaseCorr.child("y_position").setValue(pos_y);
+		//firebaseCorr.child("base x").setValue(base_x);
+		//firebaseCorr.child("base y").setValue(base_y);
 
 
 		int err;
@@ -118,9 +118,9 @@ public class fitting {
 
 		Log.v("01알림", "코릴레이션 결과"+ R);
 
-		firebaseCorr.child("xcorr").setValue(xcorr_list);
-		firebaseCorr.child("shifted_x").setValue(shifted_list);
-		firebaseCorr.child("new_base").setValue(base_new_list);
+		//firebaseCorr.child("xcorr").setValue(xcorr_list);
+		//firebaseCorr.child("shifted_x").setValue(shifted_list);
+		//firebaseCorr.child("new_base").setValue(base_new_list);
 
 
 		return result;

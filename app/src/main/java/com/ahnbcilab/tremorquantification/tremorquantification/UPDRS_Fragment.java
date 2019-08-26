@@ -12,13 +12,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ahnbcilab.tremorquantification.Adapters.AlertDialogHelper;
+import com.ahnbcilab.tremorquantification.Adapters.RecyclerItemClickListener;
 import com.ahnbcilab.tremorquantification.Adapters.RecyclerViewAdapter;
 import com.ahnbcilab.tremorquantification.Adapters.TaskListViewAdapter;
 import com.ahnbcilab.tremorquantification.data.TaskItem;
@@ -27,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -43,22 +52,30 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 
+
 public class UPDRS_Fragment extends Fragment {
     RecyclerView recyclerView;
     TaskListViewAdapter taskListViewAdapter;
     ArrayList<TaskItem> tasks = new ArrayList<TaskItem>();
+    ArrayList<TaskItem> selected_tasks = new ArrayList<>() ;
+    AlertDialogHelper alertDialogHelper;
+
+    Context context ;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference database_updrs;
     DatabaseReference database_patient;
+
+    ActionMode mActionMode;
+    Menu context_menu;
+    boolean isMultiSelect = false;
+
     String Clinic_ID;
     String PatientName;
-    String uid;
     View view;
     File file;
     String m;
     String timestamp;
     String updrs_score;
-
 
 
     @Nullable
@@ -69,7 +86,6 @@ public class UPDRS_Fragment extends Fragment {
         if(getArguments() != null){
             Clinic_ID = getArguments().getString("Clinic_ID");
             PatientName = getArguments().getString("PatientName");
-            uid = getArguments().getString("doc_uid");
         }
 
         // 초기 화면
@@ -81,10 +97,10 @@ public class UPDRS_Fragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), MotorScaleTaskActivity.class);
+                Intent intent = new Intent(view.getContext(), UPDRSActivity.class);
                 intent.putExtra("Clinic_ID",Clinic_ID);
                 intent.putExtra("PatientName", PatientName);
-                intent.putExtra("doc_uid", uid);
+                intent.putExtra("updrs_num", m);
                 startActivity(intent);
             }
         });
@@ -122,47 +138,26 @@ public class UPDRS_Fragment extends Fragment {
             if(Integer.parseInt(m) > 0){
                 view = inflater.inflate(R.layout.task_updrs_fragment, container, false);
                 recyclerView = (RecyclerView) view.findViewById(R.id.personal_updrs_taskList);
-                taskListViewAdapter = new TaskListViewAdapter(getActivity(), tasks);
+                taskListViewAdapter = new TaskListViewAdapter(getActivity(), tasks, selected_tasks);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(taskListViewAdapter);
-
-                database_patient.orderByChild("ClinicID").equalTo(Clinic_ID).addValueEventListener(new ValueEventListener() {
+                taskListViewAdapter.clear();
+                database_patient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        int count = 1;
+                        //int count = 1;
                         GraphView graphView = (GraphView) view.findViewById(R.id.updrs_graph);
                         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                         series.appendData(new DataPoint(0,0), true, 100);
-                        //recyclerViewAdapter.clear();
+                        taskListViewAdapter.clear();
                         for (DataSnapshot mData : dataSnapshot.getChildren()){
-                            String msg = mData.child("UPDRS List").getValue().toString();
-                            String[] array = msg.split(", |\\}");
-                            for(int i=0; i<array.length; i++){
-                                if(array[i].contains("UPDRS_score")){
-                                    updrs_score = array[i].substring(array[i].indexOf("=") +1);
-                                    series.appendData(new DataPoint(count,Integer.parseInt(updrs_score)), true, 100);
-                                    series.setDrawDataPoints(true);
-                                    graphView.removeAllSeries();
-                                    graphView.addSeries(series);
-                                    graphView.getViewport().setScalableY(true);
-                                    graphView.getViewport().setScrollableY(true);
-                                    graphView.getViewport().setMinX(0.0);
-                                    graphView.getViewport().setMaxX(4.0);
-                                }
-                                if(array[i].contains("timestamp")){
-                                    timestamp = array[i].substring(array[i].indexOf("=")+1);
-                                    String taskDate = timestamp.substring(0, timestamp.indexOf(" "));
-                                    String taskTime = timestamp.substring(timestamp.indexOf(" ")+1, timestamp.lastIndexOf(":"));
-                                    tasks.add(new TaskItem(String.valueOf(count), taskDate, taskTime));
-                                    taskListViewAdapter.notifyDataSetChanged();
-                                    count++;
-                                }
+                            Long number = mData.child("UPDRS List").getChildrenCount() ;
+                            for(int i = 0 ; i<number ; i++){
+                                list(i, mData, graphView, series, m) ;
+
                             }
-
-
-
-
                         }
+
                     }
 
                     @Override
@@ -171,7 +166,6 @@ public class UPDRS_Fragment extends Fragment {
                     }
                 });
 
-
                 Button updrs_task = (Button) view.findViewById(R.id.updrs_add);
 
                 // UPDRS task 추가
@@ -179,13 +173,36 @@ public class UPDRS_Fragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(view.getContext(), MotorScaleTaskActivity.class);
+                        Intent intent = new Intent(view.getContext(), UPDRSActivity.class);
                         intent.putExtra("Clinic_ID",Clinic_ID);
                         intent.putExtra("PatientName", PatientName);
-                        intent.putExtra("doc_uid", uid);
+                        intent.putExtra("updrs_num", m);
                         startActivity(intent);
                     }
                 });
+
+                recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(view.getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view1, int position) {
+                        TextView taskDate = view1.findViewById(R.id.taskDate);
+                        TextView taskTime = view1.findViewById(R.id.taskTime);
+                        TextView taskscore = view1.findViewById(R.id.taskscore);
+                        Intent intent = new Intent(getActivity(), Personal_UPDRS.class);
+                        intent.putExtra("ClinicID", Clinic_ID);
+                        intent.putExtra("PatientName", PatientName);
+                        intent.putExtra("taskDate", taskDate.getText());
+                        intent.putExtra("taskTime", taskTime.getText());
+                        intent.putExtra("taskScore", taskscore.getText());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view1, int position) {
+
+                    }
+                }));
+
+
             }
         }
 
@@ -235,4 +252,36 @@ public class UPDRS_Fragment extends Fragment {
     }
 
 
+
+    private void list(final int i, final DataSnapshot mData, final GraphView graphView, final LineGraphSeries<DataPoint> series, final String updrs_num) {
+        Query query = database_patient.child(Clinic_ID).child("UPDRS List").orderByChild("UPDRS_count").equalTo(i) ;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                    String key = dataSnapshot1.getKey() ;
+                    updrs_score = String.valueOf(mData.child("UPDRS List").child(key).child("UPDRS_score").getValue()) ;
+                    series.appendData(new DataPoint(i+1,Integer.parseInt(updrs_score)), true, 100);
+                    //series.setDrawDataPoints(true);
+                    graphView.removeAllSeries();
+                    graphView.addSeries(series);
+                    graphView.getViewport().setScalableY(true);
+                    graphView.getViewport().setScrollableY(true);
+                    graphView.getViewport().setMinX(0.0);
+                    graphView.getViewport().setMaxX(Integer.parseInt(updrs_num));
+
+                    timestamp = String.valueOf(mData.child("UPDRS List").child(key).child("timestamp").getValue()) ;
+                    String taskDate = timestamp.substring(0, timestamp.indexOf(" "));
+                    String taskTime = timestamp.substring(timestamp.indexOf(" ")+1);
+                    tasks.add(new TaskItem(String.valueOf(i+1), taskDate, taskTime, updrs_score, "/ 108"));
+                    taskListViewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

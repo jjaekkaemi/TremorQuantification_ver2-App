@@ -1,0 +1,13 @@
+#Mon Aug 26 23:40:54 KST 2019
+path.3=classes2.dex
+path.2=classes.dex
+path.1=classes.dex
+path.0=classes.dex
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.3=D\:\\8.26\\TremorQuantification-master(2) 3 2 2 2\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\2
+base.2=D\:\\8.26\\TremorQuantification-master(2) 3 2 2 2\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+base.1=D\:\\8.26\\TremorQuantification-master(2) 3 2 2 2\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\2
+base.0=D\:\\8.26\\TremorQuantification-master(2) 3 2 2 2\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0

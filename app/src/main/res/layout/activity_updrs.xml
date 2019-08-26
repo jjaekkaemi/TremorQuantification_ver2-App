@@ -1,295 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
-    tools:context=".UPDRSActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="29dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/white_arrow" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:background="@drawable/task_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/clinic_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="28dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="93dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@drawable/rectangle3"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+        <TextView
+            android:id="@+id/patient_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintStart_toEndOf="@+id/clinic_id"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="25dp"
-        android:text="UPDRS Task"
-        android:textColor="#ffffff"
-        android:textSize="35dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/updrs_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="56dp"
+            android:text="UPDRS Task"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/updrs_quit_button"
+            app:layout_constraintHorizontal_bias="0.083"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="605dp"
-        android:layout_marginTop="30dp"
-        android:text="Clinic ID"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        <Button
+            android:id="@+id/updrs_quit_button"
+            android:layout_width="106dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="8dp"
+            android:text="종료"
+            android:textSize="20sp"
+            android:background="@drawable/quit_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.613" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="718dp"
-        android:layout_marginTop="30dp"
-        android:text="Name"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="30sp"/>
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text="1. 말하기"
-        android:textSize="25sp"/>
+    <FrameLayout
+        android:id="@+id/updrs_test"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="10sp"/>
+    </FrameLayout>
 
-    <View
-        android:layout_width="743dp"
-        android:layout_height="2dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:layout_centerInParent="true"
-        android:background="#000000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="10sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          0.정상"
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          1. 약간 억양이 감소되어있고 말수나 목소리 크기가 감소된 정도다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          2. 말이 느리고 단일 음색이나 알아들을 수 있는 정도이며 확실히 비정상이라고 생각되는 경우"
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          3. 심한 손상으로 알아듣기 힘든 정도다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          4. 거의 알아 들을 수 없는 정도의 심한 손상이다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="20sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text="2. 얼굴 표정"
-        android:textSize="25sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="10sp"/>
-
-    <View
-        android:layout_width="743dp"
-        android:layout_height="2dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:layout_centerInParent="true"
-        android:background="#000000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="10sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          0.정상"
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          1. 약간 표정이 감소된 정도로 정상으로 간주 될 수 있는 정도다. : poker face"
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          2. 약간 표정이 감소되었지만 확실히 비정상으로 간주 될 수 있는 정도다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          3. 중등도로 표정이 감소되어 간혹 입술이 벌어지는 정도다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="5sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
-        android:text="          4. 심하게 얼굴이 굳은 표정이고 심하게 혹은 완전히 무표정한 상태로 입술은 약 1/4 inch 정도 벌어져 있다."
-        android:textAlignment="textStart"
-        android:background="@drawable/nontask" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30sp"
-        android:text=""
-        android:textSize="20sp"/>
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

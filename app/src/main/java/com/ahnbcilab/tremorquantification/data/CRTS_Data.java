@@ -31,9 +31,11 @@ public class CRTS_Data {
     int 기립성_안정시;
     int 기립성_자세시;
     int 기립성_운동시;
-    int 그림그리기;
-    int 물따르기_우측;
-    int 물따르기_좌측;
+    int 글씨_쓰기;
+    int 그림그리기1;
+    int 그림그리기2;
+    int 그림그리기3;
+    int 물따르기;
     int 말하기;
     int 음식먹기;
     int 물을_입에_갖다대기;
@@ -43,7 +45,7 @@ public class CRTS_Data {
     int 일하기;
     int 사회활동;
 
-    public CRTS_Data(int 얼굴_안정시, int 얼굴_자세시, int 얼굴_운동시, int 혀_안정시, int 혀_자세시, int 혀_운동시, int 목소리_안정시, int 목소리_자세시, int 목소리_운동시, int 머리_안정시, int 머리_자세시, int 머리_운동시, int 우측상지_안정시, int 우측상지_자세시, int 우측상지_운동시, int 좌측상지_안정시, int 좌측상지_자세시, int 좌측상지_운동시, int 체간_안정시, int 체간_자세시, int 체간_운동시, int 우측하지_안정시, int 우측하지_자세시, int 우측하지_운동시, int 좌측하지_안정시, int 좌측하지_자세시, int 좌측하지_운동시, int 기립성_안정시, int 기립성_자세시, int 기립성_운동시, int 그림그리기, int 물따르기_우측, int 물따르기_좌측, int 말하기, int 음식먹기, int 물을_입에_갖다대기, int 개인위생, int 옷입기, int 글쓰기, int 일하기, int 사회활동) {
+    public CRTS_Data(int 얼굴_안정시, int 얼굴_자세시, int 얼굴_운동시, int 혀_안정시, int 혀_자세시, int 혀_운동시, int 목소리_안정시, int 목소리_자세시, int 목소리_운동시, int 머리_안정시, int 머리_자세시, int 머리_운동시, int 우측상지_안정시, int 우측상지_자세시, int 우측상지_운동시, int 좌측상지_안정시, int 좌측상지_자세시, int 좌측상지_운동시, int 체간_안정시, int 체간_자세시, int 체간_운동시, int 우측하지_안정시, int 우측하지_자세시, int 우측하지_운동시, int 좌측하지_안정시, int 좌측하지_자세시, int 좌측하지_운동시, int 기립성_안정시, int 기립성_자세시, int 기립성_운동시, int 글씨_쓰기, int 그림그리기1, int 그림그리기2, int 그림그리기3, int 물따르기, int 말하기, int 음식먹기, int 물을_입에_갖다대기, int 개인위생, int 옷입기, int 글쓰기, int 일하기, int 사회활동) {
         this.얼굴_안정시 = 얼굴_안정시;
         this.얼굴_자세시 = 얼굴_자세시;
         this.얼굴_운동시 = 얼굴_운동시;
@@ -74,9 +76,11 @@ public class CRTS_Data {
         this.기립성_안정시 = 기립성_안정시;
         this.기립성_자세시 = 기립성_자세시;
         this.기립성_운동시 = 기립성_운동시;
-        this.그림그리기 = 그림그리기;
-        this.물따르기_우측 = 물따르기_우측;
-        this.물따르기_좌측 = 물따르기_좌측;
+        this.글씨_쓰기 = 글씨_쓰기;
+        this.그림그리기1 = 그림그리기1;
+        this.그림그리기2 = 그림그리기2;
+        this.그림그리기3 = 그림그리기3;
+        this.물따르기 = 물따르기;
         this.말하기 = 말하기;
         this.음식먹기 = 음식먹기;
         this.물을_입에_갖다대기 = 물을_입에_갖다대기;
@@ -207,16 +211,24 @@ public class CRTS_Data {
         return 기립성_운동시;
     }
 
-    public int get그림그리기() {
-        return 그림그리기;
+    public int get글씨_쓰기() {
+        return 글씨_쓰기;
     }
 
-    public int get물따르기_우측() {
-        return 물따르기_우측;
+    public int get그림그리기1() {
+        return 그림그리기1;
     }
 
-    public int get물따르기_좌측() {
-        return 물따르기_좌측;
+    public int get그림그리기2() {
+        return 그림그리기2;
+    }
+
+    public int get그림그리기3() {
+        return 그림그리기3;
+    }
+
+    public int get물따르기() {
+        return 물따르기;
     }
 
     public int get말하기() {

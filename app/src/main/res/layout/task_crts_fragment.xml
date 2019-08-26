@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,32 +9,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textSize="10sp"/>
-
-
-    <Button
-        android:id="@+id/crts_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="crts_add"
-        />
-
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="@color/colorPrimary"
         android:textSize="40sp"/>
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="400dip"
+        <Button
+            android:layout_gravity="center"
+            android:id="@+id/crts_add"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/new_task"
+            tools:ignore="RtlCompat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:text="Task 결과 추이"
+            android:layout_marginBottom="10dp"
+            android:textSize="20sp" />
+
+        <com.jjoe64.graphview.GraphView
+        android:layout_width="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+        android:layout_height="300dip"
         android:id="@+id/crts_graph" />
 
     <TextView
@@ -41,28 +46,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textSize="70sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="200dp"
-            android:text="Date" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:text=""
-            android:textSize="5dp"/>
-
-        <View
-            android:layout_width="782dp"
-            android:layout_height="2dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10sp"
-            android:layout_marginEnd="1sp"
-            android:background="#000000" />
+        android:textSize="30sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,14 +57,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/personal_crts_taskList"
-        android:layout_width="match_parent"
+        android:layout_width="727dp"
+        android:layout_marginLeft="35dp"
         android:layout_height="match_parent" />
 
-    <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout="@layout/empty"/>
 
     </LinearLayout>
 

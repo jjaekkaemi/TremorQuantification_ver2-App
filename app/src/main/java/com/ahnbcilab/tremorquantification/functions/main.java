@@ -1,5 +1,6 @@
 package com.ahnbcilab.tremorquantification.functions;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -11,9 +12,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +31,25 @@ public class main {
 	private static double[] Result;
 	private static final int srate = 50;
 	private static int count = 0;
+	static String Clinic_ID;
 
 	private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-	private static DatabaseReference firebaseSprial = firebaseDatabase.getReference("Spiral RowData");
+	//private static DatabaseReference firebaseSprial = firebaseDatabase.getReference("Spiral RowData");
 	public static int spiral_count;
 	private static String sspiral_count;
+	static File file;
+	static String m;
+	static Context ctx;
 
 
-	public static double[] main(String args) throws IOException {
+	public static double[] main(String args, Context context, String id) throws IOException {
+		ctx = context;
+		Clinic_ID = id;
 		// TODO Auto-generated method stub
 		double[] resultx = new double[4];      double[] resulty = new double[4];// result of fft
 		double[][] fitting;//result of fitting
 		double[][] fildata;// filled null point data
+
 
 
 
@@ -48,34 +60,38 @@ public class main {
 		String csvFile = args;
 		BufferedReader br = null;
 		String line = "";
+		file = new File(ctx.getFilesDir(), Clinic_ID + "SpiralRow_num.txt");
+		//writeToFile("0", ctx);
+
 		try {
+			/*
 			firebaseSprial.addValueEventListener(new ValueEventListener() {
 				@Override
 				public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 					for (DataSnapshot fileSnapshot : dataSnapshot.getChildren()){
-						spiral_count = (int) dataSnapshot.getChildrenCount() -1;
-						if(spiral_count == -1){
-							sspiral_count = "00";
-
-						}
-						else if(spiral_count < 10){
+						spiral_count = (int) dataSnapshot.getChildrenCount();
+						if(spiral_count < 10){
 							sspiral_count = "0" + spiral_count;
-
-
 						}
 						else{
 							sspiral_count = String.valueOf(spiral_count);
 						}
+						writeToFile(String.valueOf(spiral_count), ctx);
+
 					}
-
-
-
 				}
 
 				@Override
 				public void onCancelled(@NonNull DatabaseError databaseError) {
 					Log.v("알림", "Failed"); }
 			});
+
+			if(file.exists()){
+				m = readFromFile(ctx);
+				Log.v("SpiralRow", m);
+			}
+			*/
+
 			br = new BufferedReader(new FileReader(csvFile));
 			br.readLine();
 			while ((line = br.readLine()) != null) {
@@ -83,9 +99,9 @@ public class main {
 				orgX.add(Double.parseDouble(data[0]));
 				if(sspiral_count == null)
 					sspiral_count = "00";
-				firebaseSprial.child("Task No "+sspiral_count).child("x_position").setValue(orgX);
-				firebaseSprial.child("Task No "+sspiral_count).child("y_position").setValue(orgY);
-				firebaseSprial.child("Task No "+sspiral_count).child("time").setValue(time);
+				//firebaseSprial.child("Task No "+sspiral_count).child("x_position").setValue(orgX);
+				//firebaseSprial.child("Task No "+sspiral_count).child("y_position").setValue(orgY);
+				//firebaseSprial.child("Task No "+sspiral_count).child("time").setValue(time);
 				orgY.add(Double.parseDouble(data[1]));
 				time.add(Double.parseDouble(data[2]));
 			}
@@ -196,5 +212,46 @@ public class main {
 			}
 		}
 		return Result;
+	}
+
+	// write File
+	private static void writeToFile(String data, Context context) {
+		try {
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(Clinic_ID + "SpiralRow_num.txt", Context.MODE_PRIVATE));
+			outputStreamWriter.write(data);
+			outputStreamWriter.close();
+		}
+		catch (IOException e) {
+			Log.e("Exception", "File write failed: " + e.toString());
+		}
+	}
+
+
+
+	// read File
+	private static String readFromFile(Context context) {
+		String ret = "";
+		try {
+			InputStream inputStream = context.openFileInput(Clinic_ID + "SpiralRow_num.txt");
+			if ( inputStream != null ) {
+				InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+				BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+				String receiveString = "";
+				StringBuilder stringBuilder = new StringBuilder();
+
+				while ( (receiveString = bufferedReader.readLine()) != null ) {
+					stringBuilder.append(receiveString);
+				}
+
+				inputStream.close();
+				ret = stringBuilder.toString();
+			}
+		}
+		catch (FileNotFoundException e) {
+			Log.e("login activity", "File not found: " + e.toString());
+		} catch (IOException e) {
+			Log.e("login activity", "Can not read file: " + e.toString());
+		}
+		return ret;
 	}
 }

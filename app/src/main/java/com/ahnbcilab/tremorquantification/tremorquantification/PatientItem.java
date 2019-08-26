@@ -7,14 +7,18 @@ public class PatientItem {
     String patientName ;
     String dateFirst ;
     String dateFinal ;
+    boolean deleteBox ;
 
 
-    public PatientItem(String patientType, String clinicID, String patientName, String dateFirst, String dateFinal){
+
+    public PatientItem(String patientType, String clinicID, String patientName, String dateFirst, String dateFinal, boolean deleteBox){
         this.patientType = patientType ;
         this.clinicID = clinicID ;
         this.patientName = patientName ;
         this.dateFirst = dateFirst ;
         this.dateFinal= dateFinal ;
+        this.deleteBox = deleteBox ;
+
 
     }
 
@@ -58,4 +62,11 @@ public class PatientItem {
         this.dateFinal = dateFinal;
     }
 
+    public boolean isDeleteBox() {
+        return deleteBox;
+    }
+
+    public void setDeleteBox(boolean deleteBox) {
+        this.deleteBox = deleteBox;
+    }
 }

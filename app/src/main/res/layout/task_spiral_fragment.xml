@@ -1,50 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SPIRAL"
-        android:textSize="40dp"/>
-
-    <Button
-        android:id="@+id/spiral_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="spiral_add"
-        />
-
-    <TextView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/colorPrimary"
-        android:textSize="40sp"/>
+        android:layout_height="match_parent">
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="400dip"
-        android:id="@+id/spiral_graph" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/colorPrimary"
-        android:textSize="70sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textSize="40sp"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/personal_spiral_taskList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/spiral_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="57dp"
+            android:background="@drawable/new_task"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout="@layout/empty"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="186dp"
+            android:text="결과 추이"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/hz"
+            android:layout_width="77dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="237dp"
+            android:background="@drawable/hz_color"
+            android:text="HZ"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/tremor_magnitude"
+            android:layout_width="191dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="137dp"
+            android:layout_marginTop="237dp"
+            android:background="@drawable/magnitude_2"
+            android:text="Tremor magnitude"
+            android:textColor="#545454"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/distance"
+            android:layout_width="119dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="340dp"
+            android:layout_marginTop="237dp"
+            android:background="@drawable/distance_2"
+            android:text="Distance"
+            android:textColor="#545454"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/time"
+            android:layout_width="93dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="476dp"
+            android:layout_marginTop="237dp"
+            android:background="@drawable/time_2"
+            android:text="Time"
+            android:textColor="#545454"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/velocity"
+            android:layout_width="92dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="585dp"
+            android:layout_marginTop="237dp"
+            android:background="@drawable/velocity_2"
+            android:text="Speed"
+            android:textColor="#545454"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/spiral_graph"
+            android:layout_width="720dp"
+            android:layout_height="332dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginTop="281dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="699dp"
+            android:text="수행한 Task 목록"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:text=""
+            android:textSize="5dp"/>
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="667dp"
+            android:layout_marginTop="709dp"
+            android:background="@drawable/list_button_c"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="720dp"
+            android:layout_marginTop="709dp"
+            android:background="@drawable/draw_button_nc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/personal_spiral_taskList"
+            android:layout_width="727dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="753dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

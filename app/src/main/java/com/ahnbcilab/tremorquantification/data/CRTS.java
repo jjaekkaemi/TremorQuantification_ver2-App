@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CRTS {
-    String timestamp;
-    int CRTS_count;
+    public String timestamp;
+    public int CRTS_count;
 
     public CRTS(String timestamp, int CRTS_count) {
         this.timestamp = timestamp;

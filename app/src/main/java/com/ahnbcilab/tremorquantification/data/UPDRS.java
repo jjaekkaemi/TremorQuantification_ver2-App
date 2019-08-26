@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UPDRS {
-    String timestamp;
-    int UPDRS_count;
-    int UPDRS_score;
+    public String timestamp;
+    public int UPDRS_count;
+    public int UPDRS_score;
 
     public UPDRS(String timestamp, int UPDRS_count, int UPDRS_score) {
         this.timestamp = timestamp;

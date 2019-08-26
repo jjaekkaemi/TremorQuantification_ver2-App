@@ -3,9 +3,10 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="700dp"
     android:layout_height="80dp"
-    android:layout_margin="8dp"
+    android:layout_marginLeft="30dp"
+    android:layout_marginBottom="20dp"
     android:background="@drawable/blackline_design"
     android:clickable="true"
     android:focusable="true">
@@ -21,7 +22,7 @@
             android:id="@+id/typeViewItem"
             android:layout_width="50dp"
             android:layout_height="25dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="68dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
@@ -29,13 +30,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.512"
             tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/clinicIDItem"
             android:layout_width="80dp"
             android:layout_height="25dp"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="100dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
@@ -43,25 +45,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/typeViewItem"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.512"
             tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/patientNameItem"
             android:layout_width="60dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_horizontal"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/clinicIDItem"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/dateFirstItem"
-            android:layout_width="90dp"
             android:layout_height="25dp"
             android:layout_marginStart="60dp"
             android:layout_marginTop="8dp"
@@ -69,15 +58,47 @@
             android:gravity="center_horizontal"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/clinicIDItem"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.512"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/dateFirstItem"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/patientNameItem"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.512"
             tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/date_divide"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:text=" - "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dateFirstItem"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+
 
         <TextView
             android:id="@+id/dateFinalItem"
             android:layout_width="95dp"
             android:layout_height="25dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="1dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="8dp"
@@ -85,9 +106,23 @@
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/dateFirstItem"
+            app:layout_constraintStart_toEndOf="@+id/date_divide"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/typeViewItem"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.512"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -7,5 +7,5 @@
     <item android:id="@+id/item_et"
         android:title="ET"/>
     <item android:id="@+id/item_no"
-        android:title="No"/>
+        android:title="ㅡ"/>
 </menu>

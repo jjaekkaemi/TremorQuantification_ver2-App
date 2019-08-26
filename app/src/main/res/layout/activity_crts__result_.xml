@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CRTS_Result_Activity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/result_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/clinic_ID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="36dp"
+        android:text="11111111"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/patientName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="146dp"
+        android:layout_marginTop="36dp"
+        android:text="김한동"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="74dp"
+        android:text="CRTS Result"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/today_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="247dp"
+        android:layout_marginTop="84dp"
+        android:text="2019.08.20 04:12"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="155dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="182dp"
+        android:text="이번 Task 결과"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/gotohome"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="610dp"
+        android:layout_marginTop="84dp"
+        android:textSize="18dp"
+        android:textColor="#ffffff"
+        android:text="@string/hhh"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/crts_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="674dp"
+        android:layout_marginTop="216dp"
+        android:text="89"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="705.3dp"
+        android:layout_marginTop="225dp"
+        android:text="/172점"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/detail_result"
+        android:layout_width="163dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="597dp"
+        android:layout_marginTop="270dp"
+        android:background="@drawable/detail_result"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/result_share"
+        android:layout_width="110dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="651dp"
+        android:layout_marginTop="419dp"
+        android:background="@drawable/result_share"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="416dp"
+        android:text="결과 추이"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+        android:id="@+id/crts_barchart"
+        android:layout_width="619dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="221dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/crts_result_graph"
+        android:layout_width="720dp"
+        android:layout_height="332dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="470dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

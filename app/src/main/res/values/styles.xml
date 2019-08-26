@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
     </style>
 
     <style name="actionMode">
@@ -41,6 +42,17 @@
     <style name="TextLabel" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">24sp</item>
     </style>
+
+    <style name="survey2">
+    <item name="android:lineSpacingExtra">30sp</item>
+    <item name="android:padding">10dp</item>
+    <item name="android:paddingLeft">20dp</item>
+    </style>
+
+    <style name="survey3">
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+
 
     <style name="survey">
         <item name="android:textSize">15sp</item>

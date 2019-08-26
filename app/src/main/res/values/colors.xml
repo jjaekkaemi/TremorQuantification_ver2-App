@@ -5,7 +5,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="WhiteGray">#CCCCCC</color>
-    <color name="Background">#FCFCFC</color>
+    <color name="Background">#EDEFF3</color>
+    <color name="Gray">#868e96</color>
 
     <color name="Primary">#004e66</color>
     <color name="Secondary">#fcbe32</color>

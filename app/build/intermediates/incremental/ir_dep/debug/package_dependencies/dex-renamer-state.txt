@@ -1,0 +1,7 @@
+#Sun Aug 25 23:47:39 KST 2019
+base.0=/Users/hyojeong/Downloads/TremorQuantification-master(2) 3 2 2 2/app/build/intermediates/transforms/dexMerger/debug/10
+path.1=classes2.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=/Users/hyojeong/Downloads/TremorQuantification-master(2) 3 2 2 2/app/build/intermediates/transforms/dexMerger/debug/10

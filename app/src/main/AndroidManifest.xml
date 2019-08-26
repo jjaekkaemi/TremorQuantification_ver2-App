@@ -18,26 +18,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SpiralTestActivity" />
-        <activity android:name=".LineTestActivity" />
         <activity android:name=".LineResultActivity" />
-        <activity android:name=".WrittenConsentActivity" />
         <activity android:name=".AnalysisActivity" />
-        <activity android:name=".ResultActivity" />
-        <activity android:name=".SurveyListActivity" />
-        <activity android:name=".SubmitActivity" />
         <activity android:name=".SpiralResultActivity" />
-        <activity android:name=".PersonalPatient2" />
-        <activity android:name=".MotorScaleTaskActivity" />
-        <activity android:name=".CRTS_TaskActivity" />
-        <activity android:name=".PersonalPatient_MotorScale" />
-        <activity android:name=".PersonalPatient_CRTS" />
         <activity android:name=".PersonalPatient" />
         <activity
             android:name=".PatientListActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".UPDRSActivity" />
-        <activity android:name=".CRTSActivity"></activity>
+        <activity android:name=".CRTSActivity" />
+        <activity android:name=".WritingActivity" />
+        <activity android:name=".Spiral" />
+        <activity android:name=".CRTS_Result_Activity" />
+        <activity android:name=".CRTS_detailResult" />
+        <activity android:name=".Line" />
+        <activity android:name=".UPDRS_Result_Activity" />
+        <activity android:name=".UPDRS_detailResult" />
+        <activity android:name=".Personal_UPDRS" />
+        <activity android:name=".Personal_spiral" />
+        <activity android:name=".CRTS_SpiralResult" />
+        <activity android:name=".WritingResult" />
+        <activity android:name=".CRTS_LineResult"></activity>
     </application>
 
 </manifest>

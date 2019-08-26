@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="60dp"
     android:layout_margin="8dp"
     android:background="@drawable/task_list"
     android:clickable="true"
@@ -59,19 +59,38 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
-        <Button
-            android:id="@+id/task_edit"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/menu"
+        <TextView
+            android:id="@+id/taskscore"
+            android:layout_width="65dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="408dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:text="89"
+            android:textColor="@color/colorPrimary"
+            android:textSize="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.959"
-            app:layout_constraintStart_toEndOf="@+id/taskTime"
+            app:layout_constraintStart_toEndOf="@+id/taskDate"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.508" />
+            app:layout_constraintVertical_bias="0.428"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/totalScore"
+            android:layout_width="60dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="448dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:text="/ 100"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/taskDate"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints" />
+
 
 
 

@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -40,15 +41,15 @@ public class CRTS_Fragment extends Fragment {
     RecyclerView recyclerView;
     TaskListViewAdapter taskListViewAdapter;
     ArrayList<TaskItem> tasks = new ArrayList<TaskItem>();
+    ArrayList<TaskItem> selected_tasks = new ArrayList<TaskItem>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference database_crts;
     DatabaseReference database_patient;
     String Clinic_ID;
     String PatientName;
-    String uid;
     View view;
     File file;
-    String m;
+    String m= "0";
     String timestamp;
     String crts_score;
     String partA_score, partB_score, partC_score;
@@ -61,7 +62,6 @@ public class CRTS_Fragment extends Fragment {
         if(getArguments() != null){
             Clinic_ID = getArguments().getString("Clinic_ID");
             PatientName = getArguments().getString("PatientName");
-            uid = getArguments().getString("doc_uid");
         }
 
 
@@ -74,11 +74,11 @@ public class CRTS_Fragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), CRTS_TaskActivity.class);
+                Intent intent = new Intent(view.getContext(), CRTSActivity.class);
                 intent.putExtra("Clinic_ID",Clinic_ID);
                 intent.putExtra("PatientName", PatientName);
-                intent.putExtra("doc_uid", uid);
                 intent.putExtra("path", "main");
+                intent.putExtra("crts_num", m);
                 startActivity(intent);
             }
         });
@@ -117,57 +117,25 @@ public class CRTS_Fragment extends Fragment {
             if(Integer.parseInt(m) > 0){
                 view = inflater.inflate(R.layout.task_crts_fragment, container, false);
                 recyclerView = (RecyclerView) view.findViewById(R.id.personal_crts_taskList);
-                taskListViewAdapter = new TaskListViewAdapter(getActivity(), tasks);
+                taskListViewAdapter = new TaskListViewAdapter(getActivity(), tasks, selected_tasks);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(taskListViewAdapter);
 
-                database_patient.orderByChild("ClinicID").equalTo(Clinic_ID).addValueEventListener(new ValueEventListener() {
+
+                database_patient.orderByChild("ClinicID").equalTo(Clinic_ID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int count = 1;
                         GraphView graphView = (GraphView) view.findViewById(R.id.crts_graph);
                         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                         series.appendData(new DataPoint(0,0), true, 100);
+                        taskListViewAdapter.clear();
                         for (DataSnapshot mData : dataSnapshot.getChildren()){
-                            String msg = mData.child("CRTS List").getValue().toString();
-                            String[] array = msg.split(", |\\}");
-                            for(int i=0; i<array.length; i++){
-                                if(array[i].contains("partC_score") || array[i].contains("partB_score") || array[i].contains("partA_score")){
-                                    if(array[i].contains("partA_score")){
-                                        partA_score = array[i].substring(array[i].indexOf("=")+1);
-                                    }
-                                    else if(array[i].contains("partB_score")){
-                                        partB_score = array[i].substring(array[i].indexOf("=")+1);
-                                    }
-                                    else{
-                                        partC_score = array[i].substring(array[i].lastIndexOf("=")+1);
-                                    }
-                                    if(partA_score!= null && partB_score!= null && partC_score != null){
-                                        crts_score = String.valueOf(Integer.parseInt(partA_score) + Integer.parseInt(partB_score) + Integer.parseInt(partC_score));
-                                        series.appendData(new DataPoint(count,Integer.parseInt(crts_score)), true, 100);
-                                        series.setDrawDataPoints(true);
-                                        graphView.removeAllSeries();
-                                        graphView.addSeries(series);
-                                        graphView.getViewport().setScalableY(true);
-                                        graphView.getViewport().setScrollableY(true);
-                                        graphView.getViewport().setMinX(0.0);
-                                        graphView.getViewport().setMaxX(4.0);
-                                    }
-                                }
-                                if(array[i].contains("timestamp")){
-                                    timestamp = array[i].substring(array[i]
-                                            .indexOf("=")+1);
-                                    String taskDate = timestamp.substring(0, timestamp.indexOf(" "));
-                                    String taskTime = timestamp.substring(timestamp.indexOf(" ")+1, timestamp.lastIndexOf(":"));
-                                    tasks.add(new TaskItem(String.valueOf(count), taskDate, taskTime));
-                                    taskListViewAdapter.notifyDataSetChanged();
-                                    count++;
-                                }
+                            Long number = mData.child("CRTS List").getChildrenCount() ;
+                            //Toast.makeText(view.getContext(), number+"", Toast.LENGTH_SHORT).show();
+                            for(int i = 1 ; i<=number; i++) {
+                                list(i, mData, graphView, series, m) ;
                             }
-
-
-
-
                         }
                     }
 
@@ -176,17 +144,18 @@ public class CRTS_Fragment extends Fragment {
 
                     }
                 });
+
                 Button add_crts = (Button) view.findViewById(R.id.crts_add);
 
                 add_crts.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(view.getContext(), CRTS_TaskActivity.class);
+                        Intent intent = new Intent(view.getContext(), CRTSActivity.class);
                         intent.putExtra("Clinic_ID",Clinic_ID);
                         intent.putExtra("PatientName", PatientName);
-                        intent.putExtra("doc_uid", uid);
                         intent.putExtra("path", "main");
+                        intent.putExtra("crts_num", m);
                         startActivity(intent);
                     }
                 });
@@ -238,6 +207,43 @@ public class CRTS_Fragment extends Fragment {
             Log.e("login activity", "Can not read file: " + e.toString());
         }
         return ret;
+    }
+
+    private void list(final int i, final DataSnapshot mData, final GraphView graphView, final LineGraphSeries<DataPoint> series, final String crts_num) {
+        Query query = database_patient.child(Clinic_ID).child("CRTS List").orderByChild("CRTS_count").equalTo(i) ;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String key = dataSnapshot1.getKey() ;
+
+                    partA_score = String.valueOf(mData.child("CRTS List").child(key).child("CRTS score").child("partA_score").getValue()) ;
+                    partB_score = String.valueOf(mData.child("CRTS List").child(key).child("CRTS score").child("partB_score").getValue()) ;
+                    partC_score = String.valueOf(mData.child("CRTS List").child(key).child("CRTS score").child("partC_score").getValue()) ;
+                    crts_score = String.valueOf(Integer.parseInt(partA_score) + Integer.parseInt(partB_score) + Integer.parseInt(partC_score));
+                    series.appendData(new DataPoint(i,Integer.parseInt(crts_score)), true, 100);
+                    //series.setDrawDataPoints(true);
+                    graphView.removeAllSeries();
+                    graphView.addSeries(series);
+                    graphView.getViewport().setScalableY(true);
+                    graphView.getViewport().setScrollableY(true);
+                    graphView.getViewport().setMinX(0.0);
+                    graphView.getViewport().setMaxX(Integer.parseInt(crts_num));
+
+                    timestamp = String.valueOf(mData.child("CRTS List").child(key).child("timestamp").getValue()) ;
+                    String taskDate = timestamp.substring(0, timestamp.indexOf(" "));
+                    String taskTime = timestamp.substring(timestamp.indexOf(" ")+1);
+                    tasks.add(new TaskItem(String.valueOf(i), taskDate, taskTime, crts_score, "/ 172"));
+                    taskListViewAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

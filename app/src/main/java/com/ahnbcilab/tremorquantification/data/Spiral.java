@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Spiral {
-    String timestamp;
-    int SPIRAL_count;
+    public String timestamp;
+    public int SPIRAL_count;
 
     public Spiral(String timestamp, int SPIRAL_count) {
         this.timestamp = timestamp;
