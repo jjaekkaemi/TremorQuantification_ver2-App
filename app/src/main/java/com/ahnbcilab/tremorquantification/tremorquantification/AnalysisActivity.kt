@@ -25,6 +25,7 @@ class AnalysisActivity : AppCompatActivity() {
         Clinic_ID = intent.getStringExtra("Clinic_ID")
         PatientName = intent.getStringExtra("PatientName")
         task = intent.getStringExtra("task")
+        Log.v("editPatient", "PatientName : " +task)
         var spiral_result = intent.getDoubleArrayExtra("spiral_result")
         var crts_num = intent.getStringExtra("crts_num")
 
@@ -57,7 +58,7 @@ class AnalysisActivity : AppCompatActivity() {
             dialog.dismiss()
             val intent1 = Intent(this, Line::class.java)
             intent1.putExtra("spiral_result", spiral_result)
-            intent1.putExtra("path1", path1)
+            intent1.putExtra("path", path1)
             intent1.putExtra("Clinic_ID", Clinic_ID)
             intent1.putExtra("PatientName", PatientName)
             intent1.putExtra("crts_num", crts_num)
