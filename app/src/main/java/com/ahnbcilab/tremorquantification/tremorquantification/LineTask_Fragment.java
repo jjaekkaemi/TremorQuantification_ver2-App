@@ -78,7 +78,7 @@ public class LineTask_Fragment extends Fragment {
             PatientName = getArguments().getString("PatientName");
             path = getArguments().getString("path");
         }
-
+        Log.v("lineTask_path", "path : " + path);
 
         // 초기 화면
         view = inflater.inflate(R.layout.non_task_fragment, container, false);

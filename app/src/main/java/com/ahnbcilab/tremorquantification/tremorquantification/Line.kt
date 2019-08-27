@@ -48,7 +48,8 @@ class Line : AppCompatActivity() {
 
 
         val intent = intent
-        path1 = intent.getStringExtra("path1")
+
+        path1 = intent.getStringExtra("path")
         Clinic_ID = intent.getStringExtra("Clinic_ID")
         PatientName = intent.getStringExtra("PatientName")
         val spiral_result = intent.getDoubleArrayExtra("spiral_result")
@@ -72,7 +73,7 @@ class Line : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             intent.putExtra("Clinic_ID", Clinic_ID)
             intent.putExtra("filename", filename)
-            intent.putExtra("path1", path1)
+            intent.putExtra("path", path1)
             intent.putExtra("spiral_result", spiral_result)
             intent.putExtra("crts_num", crts_num)
             startActivity(intent)
