@@ -58,24 +58,31 @@ public class UPDRS_Result_Activity extends AppCompatActivity {
         database_updrs = database_patient.child(Clinic_ID).child("UPDRS List");
 
         HorizontalBarChart chart = (HorizontalBarChart)findViewById(R.id.updrs_barchart);
-        BarDataSet set1;
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
-        BarEntry v1e2 = new BarEntry(1, 89f);
+        BarEntry v1e2 = new BarEntry(1, new float[]{30f,30f,20f});
+        int[] colorClassArray = new int[]{Color.GREEN, Color.YELLOW, Color.RED} ;
         valueSet1.add(v1e2);
-        set1 = new BarDataSet(valueSet1, "today_score");
-        set1.setColors(Color.parseColor("#F78B5D"));
+        BarDataSet set1 = new BarDataSet(valueSet1, "today_score");
+        set1.setColors(colorClassArray);
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(set1);
-        BarData data = new BarData(dataSets);
-        YAxis left = chart.getAxisLeft();
-        left.setDrawLabels(false);
-        left.setDrawAxisLine(false);
-        left.setDrawGridLines(false);
-        chart.setDrawGridBackground(false);
-        chart.getLegend().setEnabled(false);
-        chart.setTouchEnabled(false);
+        BarData data = new BarData(set1);
+//        YAxis left = chart.getAxisLeft();
+//        left.setDrawLabels(false);
+//        left.setDrawAxisLine(false);
+//        left.setDrawGridLines(false);
+//        chart.setDrawGridBackground(false);
+//        chart.getLegend().setEnabled(false);
+//        chart.setTouchEnabled(false);
         XAxis xAxis = chart.getXAxis();
         xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(false);
+
+        YAxis right = chart.getAxisRight() ;
+        right.setDrawLabels(false);
+        right.setDrawAxisLine(false);
+        right.setDrawGridLines(false);
+
         ArrayList<String> xVals = new ArrayList<String>();
         xVals.add("");
         xAxis.setValueFormatter(new IndexAxisValueFormatter(xVals));
@@ -87,7 +94,8 @@ public class UPDRS_Result_Activity extends AppCompatActivity {
 
         // hide legend
         chart.getLegend().setEnabled(false);
-
+        chart.getAxisLeft().setAxisMaximum(108);
+        chart.getAxisLeft().setAxisMinimum(0) ;
         chart.animateY(1000);
         chart.invalidate();
 
